@@ -4,15 +4,16 @@ import { redirect, notFound } from 'next/navigation'
 import { ChatInterface } from '@/components/chat/ChatInterface'
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function ChatPage({ params }: PageProps) {
+  const { id } = await params
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
   const chat = await prisma.chat.findFirst({
-    where: { id: params.id, userId: session.user.id },
+    where: { id: id, userId: session.user.id },
     include: {
       messages: { orderBy: { createdAt: 'asc' } },
     },
@@ -27,5 +28,5 @@ export default async function ChatPage({ params }: PageProps) {
     imageUrl: m.imageUrl,
   }))
 
-  return <ChatInterface chatId={params.id} initialMessages={messages} />
+  return <ChatInterface chatId={id} initialMessages={messages} />
 }

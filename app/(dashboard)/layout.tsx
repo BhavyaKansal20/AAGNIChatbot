@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen bg-aagni-bg flex overflow-hidden h-screen">
+    <div className="dark-premium min-h-screen bg-aagni-darkbg flex overflow-hidden h-screen text-aagni-text">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((p) => !p)}

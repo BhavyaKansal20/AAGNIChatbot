@@ -1,15 +1,13 @@
 'use client'
 import { motion } from 'framer-motion'
 import { AagniOrb } from '@/components/effects/AagniOrb'
-import { OmSymbol, LotusIcon, DiyaIcon, ChakraIcon } from '@/components/ui/IndianIcons'
+import { Search, Code2, Image as ImageIcon, PenTool } from 'lucide-react'
 
 const SUGGESTIONS = [
-  { text: 'Explain the philosophy of the Bhagavad Gita', icon: '📿' },
-  { text: 'Write a Python script to scrape news headlines', icon: '🐍' },
-  { text: 'मुझे AI और Machine Learning के बारे में बताओ', icon: '🤖' },
-  { text: 'Design a business plan for an Indian startup', icon: '🚀' },
-  { text: 'Explain ISRO\'s Chandrayaan-3 mission success', icon: '🌙' },
-  { text: 'Write a poem about the Ganges river at dawn', icon: '🌅' },
+  { text: 'Research the latest advancements in Quantum Computing', icon: Search, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+  { text: 'Write a Python script to scrape news headlines', icon: Code2, color: 'text-green-400', bg: 'bg-green-400/10' },
+  { text: 'Analyze this image and extract the text', icon: ImageIcon, color: 'text-purple-400', bg: 'bg-purple-400/10' },
+  { text: 'Draft a professional email to my team', icon: PenTool, color: 'text-aagni-saffron', bg: 'bg-aagni-saffron/10' },
 ]
 
 interface EmptyStateProps {
@@ -19,134 +17,73 @@ interface EmptyStateProps {
 
 export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-6 py-12">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 left-1/4 text-aagni-saffron/5"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-        >
-          <ChakraIcon size={200} />
-        </motion.div>
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 text-aagni-gold/5"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
-        >
-          <ChakraIcon size={150} />
-        </motion.div>
-      </div>
+    <div className="flex flex-col items-center justify-center h-full px-6 py-12 relative">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-aagni-saffron/5 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="flex flex-col items-center gap-6 relative z-10 max-w-2xl w-full"
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="flex flex-col items-center gap-8 relative z-10 max-w-2xl w-full"
       >
         {/* Orb */}
         <motion.div
-          animate={{ y: [0, -8, 0] }}
+          animate={{ y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative"
         >
-          <AagniOrb size={72} />
+          <div className="absolute inset-0 bg-aagni-saffron/20 blur-2xl rounded-full" />
+          <AagniOrb size={80} />
         </motion.div>
 
         {/* Greeting */}
         <div className="text-center">
-          <motion.div
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl md:text-4xl font-bold text-white font-serif mb-3 tracking-wide"
+          >
+            What can I help you build today?
+          </motion.h1>
+          <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex items-center justify-center gap-2 mb-1"
+            className="text-white/60 text-lg font-medium"
           >
-            <OmSymbol className="w-5 h-5 text-aagni-gold/60" />
-            <h1 className="text-3xl font-bold text-saffron-gradient">
-              {userName ? `Namaste, ${userName.split(' ')[0]}` : 'Namaste'}
-            </h1>
-            <OmSymbol className="w-5 h-5 text-aagni-gold/60" />
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-aagni-subtext text-base"
-          >
-            How can Aagni assist you today?
+            Chat, Research, Create, Analyze, and Automate.
           </motion.p>
         </div>
 
-        {/* Feature badges */}
+        {/* Suggestions */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-2"
+          transition={{ delay: 0.3 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mt-4"
         >
-          {[
-            { icon: '💬', label: 'Hindi & English' },
-            { icon: '👁️', label: 'Vision AI' },
-            { icon: '🎙️', label: 'Voice Mode' },
-            { icon: '💻', label: 'Code Canvas' },
-          ].map((badge) => (
-            <span
-              key={badge.label}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-aagni-subtext border border-aagni-border bg-white/2"
-            >
-              <span>{badge.icon}</span>
-              {badge.label}
-            </span>
-          ))}
+          {SUGGESTIONS.map((sug, i) => {
+            const Icon = sug.icon
+            return (
+              <motion.button
+                key={i}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onSuggestion(sug.text)}
+                className="flex items-start gap-4 p-4 rounded-2xl dark-glass-panel border border-white/5 hover:bg-white/10 transition-colors text-left group"
+              >
+                <div className={`p-2 rounded-xl shrink-0 ${sug.bg} ${sug.color}`}>
+                  <Icon size={18} />
+                </div>
+                <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors leading-relaxed mt-1">
+                  {sug.text}
+                </span>
+              </motion.button>
+            )
+          })}
         </motion.div>
-
-        {/* Suggestion cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full mt-2"
-        >
-          {SUGGESTIONS.map((suggestion, i) => (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 + i * 0.08 }}
-              whileHover={{
-                scale: 1.02,
-                borderColor: 'rgba(255,107,0,0.4)',
-                backgroundColor: 'rgba(255,107,0,0.05)',
-              }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => onSuggestion(suggestion.text)}
-              className="flex items-start gap-3 text-left px-4 py-3 rounded-xl glass border border-aagni-border text-aagni-subtext hover:text-aagni-text transition-all text-sm"
-            >
-              <span className="text-base flex-shrink-0 mt-0.5">{suggestion.icon}</span>
-              <span className="leading-relaxed">{suggestion.text}</span>
-            </motion.button>
-          ))}
-        </motion.div>
-
-        {/* Lotus decoration */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="flex items-center gap-3 text-aagni-muted/40 mt-2"
-        >
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-aagni-border" />
-          <LotusIcon size={16} />
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-aagni-border" />
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3 }}
-          className="text-aagni-muted/50 text-xs text-center"
-        >
-          Powered by Sarvam AI · Made with pride in India 🇮🇳
-        </motion.p>
       </motion.div>
     </div>
   )

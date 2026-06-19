@@ -174,22 +174,44 @@ export function MessageBubble({
           </div>
         )}
 
-        {/* Actions for AI messages */}
-        {!isUser && onSpeak && message.content && (
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 px-1">
-            <button
-              onClick={() => onSpeak(message.content)}
-              className={`p-1.5 rounded-lg transition-colors ${
-                isSpeaking
-                  ? 'text-aagni-saffron bg-aagni-saffron/10'
-                  : 'text-aagni-muted hover:text-aagni-saffron hover:bg-aagni-saffron/5'
-              }`}
-              title="Listen"
-            >
-              <Volume2 size={13} />
+        {/* Actions for messages */}
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 mt-1 px-1">
+          {isUser ? (
+            <button className="p-1.5 rounded-lg text-aagni-muted hover:text-white hover:bg-white/5 transition-colors" title="Edit Prompt">
+              <Code2 size={13} />
             </button>
-          </div>
-        )}
+          ) : (
+            <>
+              {onSpeak && message.content && (
+                <button
+                  onClick={() => onSpeak(message.content)}
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    isSpeaking
+                      ? 'text-aagni-saffron bg-aagni-saffron/10'
+                      : 'text-aagni-muted hover:text-white hover:bg-white/5'
+                  }`}
+                  title="Listen"
+                >
+                  <Volume2 size={13} />
+                </button>
+              )}
+              <CopyButton text={message.content} />
+              <button className="p-1.5 rounded-lg text-aagni-muted hover:text-white hover:bg-white/5 transition-colors" title="Regenerate">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
+              <button className="p-1.5 rounded-lg text-aagni-muted hover:text-white hover:bg-white/5 transition-colors" title="Share">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <div className="w-[1px] h-3 bg-white/10 mx-1" />
+              <button className="p-1.5 rounded-lg text-aagni-muted hover:text-green-400 hover:bg-white/5 transition-colors" title="Like">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+              </button>
+              <button className="p-1.5 rounded-lg text-aagni-muted hover:text-red-400 hover:bg-white/5 transition-colors" title="Dislike">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </motion.div>
   )

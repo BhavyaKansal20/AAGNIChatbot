@@ -7,6 +7,9 @@ import { MessageBubble, TypingIndicator } from '@/components/chat/MessageBubble'
 import { ChatInput } from '@/components/chat/ChatInput'
 import { CodeCanvas } from '@/components/chat/CodeCanvas'
 import { EmptyState } from '@/components/chat/EmptyState'
+import { RightPanel } from '@/components/chat/RightPanel'
+import { VoiceModeOverlay } from '@/components/chat/VoiceModeOverlay'
+import { Settings } from 'lucide-react'
 
 interface Message {
   id?: string
@@ -34,6 +37,8 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
   const [isLoading, setIsLoading] = useState(false)
   const [codeCanvas, setCodeCanvas] = useState<CodeBlock | null>(null)
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null)
+  const [rightPanelOpen, setRightPanelOpen] = useState(true)
+  const [voiceModeOpen, setVoiceModeOpen] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -149,51 +154,67 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
   const isEmpty = messages.length === 0
 
   return (
-    <div className="flex h-full overflow-hidden">
-      {/* Main chat area */}
-      <div className="flex-1 flex flex-col h-full min-w-0">
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto">
-          {isEmpty ? (
-            <EmptyState
-              userName={session?.user?.name}
-              onSuggestion={(text) => handleSend(text)}
-            />
-          ) : (
-            <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
-              <AnimatePresence initial={false}>
-                {messages.map((msg) => (
-                  <MessageBubble
-                    key={msg.id || msg.content.slice(0, 20)}
-                    message={msg}
-                    userImage={session?.user?.image}
-                    userName={session?.user?.name}
-                    onOpenCanvas={handleOpenCanvas}
-                    onSpeak={(text) => handleSpeak(text, msg.id)}
-                    isSpeaking={speakingMsgId === msg.id}
-                  />
-                ))}
-                {isLoading && <TypingIndicator />}
-              </AnimatePresence>
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
+    <>
+      <div className="flex h-full overflow-hidden w-full relative">
+        {/* Main chat area */}
+        <div className="flex-1 flex flex-col h-full min-w-0">
+          {/* Top Navbar / Header area (Optional but good for spacing) */}
+          <div className="h-14 border-b border-white/5 flex items-center px-6 justify-between shrink-0">
+            <h2 className="text-sm font-semibold text-white/90">AAGNI Chat</h2>
+            <button className="xl:hidden p-2 text-aagni-muted hover:text-white transition-colors">
+              <Settings size={18} />
+            </button>
+          </div>
 
-        {/* Input area */}
-        <div className="flex-shrink-0 border-t border-aagni-border bg-aagni-bg/80 backdrop-blur-xl">
-          <div className="max-w-3xl mx-auto px-4 py-4">
-            <ChatInput
-              onSend={handleSend}
-              isLoading={isLoading}
-              disabled={false}
-            />
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto no-scrollbar relative">
+            {isEmpty ? (
+              <EmptyState
+                userName={session?.user?.name}
+                onSuggestion={(text) => handleSend(text)}
+              />
+            ) : (
+              <div className="max-w-[900px] mx-auto px-4 py-8 space-y-8">
+                <AnimatePresence initial={false}>
+                  {messages.map((msg) => (
+                    <MessageBubble
+                      key={msg.id || msg.content.slice(0, 20)}
+                      message={msg}
+                      userImage={session?.user?.image}
+                      userName={session?.user?.name}
+                      onOpenCanvas={handleOpenCanvas}
+                      onSpeak={(text) => handleSpeak(text, msg.id)}
+                      isSpeaking={speakingMsgId === msg.id}
+                    />
+                  ))}
+                  {isLoading && <TypingIndicator />}
+                </AnimatePresence>
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+          </div>
+
+          {/* Input area */}
+          <div className="flex-shrink-0 pt-4 pb-6 px-4 relative z-20">
+            <div className="max-w-[900px] mx-auto">
+              <ChatInput
+                onSend={handleSend}
+                isLoading={isLoading}
+                disabled={false}
+                onVoiceMode={() => setVoiceModeOpen(true)}
+              />
+            </div>
           </div>
         </div>
+
+        {/* Right Side Panel */}
+        <RightPanel isOpen={rightPanelOpen} onClose={() => setRightPanelOpen(false)} />
+
+        {/* Code Canvas panel */}
+        <CodeCanvas block={codeCanvas} onClose={() => setCodeCanvas(null)} />
       </div>
 
-      {/* Code Canvas panel */}
-      <CodeCanvas block={codeCanvas} onClose={() => setCodeCanvas(null)} />
-    </div>
+      <VoiceModeOverlay isOpen={voiceModeOpen} onClose={() => setVoiceModeOpen(false)} />
+    </>
   )
 }

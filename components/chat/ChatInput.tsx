@@ -9,9 +9,10 @@ interface ChatInputProps {
   onSend: (text: string, imageData?: string) => void
   isLoading: boolean
   disabled?: boolean
+  onVoiceMode?: () => void
 }
 
-export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInputProps) {
   const [text, setText] = useState('')
   const [imageData, setImageData] = useState<string | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -190,7 +191,24 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
               onChange={handleImageSelect}
             />
 
-            {/* Mic button */}
+            {/* Full Screen Voice Mode button */}
+            {onVoiceMode && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onVoiceMode}
+                disabled={isLoading || isRecording || isTranscribing}
+                className="p-2 rounded-xl text-aagni-muted hover:text-aagni-saffron hover:bg-aagni-saffron/5 transition-colors disabled:opacity-40"
+                title="Open Voice Mode"
+              >
+                <div className="relative">
+                  <Mic size={18} />
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-aagni-saffron rounded-full border border-aagni-darkbg" />
+                </div>
+              </motion.button>
+            )}
+
+            {/* In-line Mic button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -199,11 +217,11 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
               className={`p-2 rounded-xl transition-colors disabled:opacity-40 ${
                 isRecording
                   ? 'text-red-400 bg-red-400/10 hover:bg-red-400/15'
-                  : 'text-aagni-muted hover:text-aagni-saffron hover:bg-aagni-saffron/5'
+                  : 'text-aagni-muted hover:text-white hover:bg-white/5'
               }`}
-              title={isRecording ? 'Stop recording' : 'Record voice'}
+              title={isRecording ? 'Stop recording' : 'Record voice note'}
             >
-              {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
+              {isRecording ? <MicOff size={18} /> : <Mic size={18} className="opacity-50" />}
             </motion.button>
           </div>
 

@@ -1,21 +1,19 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import {
-  MessageSquarePlus, Trash2, ChevronLeft, ChevronRight,
-  LogOut, Settings, Flame
+  Plus, Search, Clock, Pin, Folder, MoreHorizontal,
+  Settings, LogOut, MessageSquare, Trash2
 } from 'lucide-react'
-import { AagniOrb } from '@/components/effects/AagniOrb'
-import { formatDate, truncate } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 
 interface Chat {
   id: string
   title: string
   updatedAt: string
-  messages?: { content: string; role: string }[]
 }
 
 export function Sidebar({
@@ -48,13 +46,10 @@ export function Sidebar({
     }
   }
 
-  const createNewChat = async () => {
+  const createChat = async () => {
     const res = await fetch('/api/sessions', { method: 'POST' })
-    const data = await res.json()
-    if (data.chat) {
-      router.push(`/chat/${data.chat.id}`)
-      fetchChats()
-    }
+    const { id } = await res.json()
+    router.push(`/chat/${id}`)
   }
 
   const deleteChat = async (e: React.MouseEvent, chatId: string) => {
@@ -64,160 +59,122 @@ export function Sidebar({
     if (currentChatId === chatId) router.push('/dashboard')
   }
 
-  const grouped = chats.reduce(
-    (acc: Record<string, Chat[]>, chat) => {
-      const label = formatDate(chat.updatedAt)
-      if (!acc[label]) acc[label] = []
-      acc[label].push(chat)
-      return acc
-    },
-    {}
-  )
-
   return (
-    <>
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="fixed inset-0 z-20 bg-black/60 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onToggle}
-          />
-        )}
-      </AnimatePresence>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.aside
+          initial={{ x: -300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -300, opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed left-4 top-4 bottom-4 w-[300px] z-40"
+        >
+          <div className="w-full h-full dark-glass-panel rounded-[32px] flex flex-col shadow-premium border border-aagni-border/50 overflow-hidden relative">
+            
+            {/* Top Section */}
+            <div className="p-4 space-y-4">
+              <button
+                onClick={createChat}
+                className="w-full h-12 rounded-[16px] bg-gradient-to-r from-aagni-saffron to-aagni-orange text-white font-medium flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,122,26,0.2)] hover:shadow-[0_6px_25px_rgba(255,122,26,0.3)] hover:-translate-y-0.5 transition-all"
+              >
+                <Plus size={18} />
+                <span>New Chat</span>
+              </button>
 
-      {/* Sidebar panel */}
-      <motion.aside
-        className="fixed left-0 top-0 z-30 h-screen flex flex-col glass-strong border-r border-aagni-border overflow-hidden"
-        animate={{ width: isOpen ? 260 : 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      >
-        <div className="flex flex-col h-full min-w-[260px]">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-aagni-border">
-            <div className="flex items-center gap-2">
-              <AagniOrb size={32} />
-              <span className="text-aagni-text font-bold text-lg tracking-tight">Aagni AI</span>
-            </div>
-            <button
-              onClick={onToggle}
-              className="p-1.5 rounded-lg text-aagni-subtext hover:text-aagni-text hover:bg-white/5 transition-colors"
-            >
-              <ChevronLeft size={16} />
-            </button>
-          </div>
-
-          {/* New chat button */}
-          <div className="p-3">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={createNewChat}
-              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-aagni-saffron/30 bg-aagni-saffron/5 text-aagni-text hover:bg-aagni-saffron/10 hover:border-aagni-saffron/50 transition-all text-sm"
-            >
-              <MessageSquarePlus size={15} className="text-aagni-saffron" />
-              <span>New conversation</span>
-            </motion.button>
-          </div>
-
-          {/* Chat list */}
-          <div className="flex-1 overflow-y-auto px-2 pb-2">
-            {loading ? (
-              <div className="space-y-2 p-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-10 rounded-lg shimmer-bg" />
-                ))}
-              </div>
-            ) : chats.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-32 text-aagni-muted text-xs text-center px-4">
-                <Flame size={20} className="mb-2 text-aagni-saffron/50" />
-                No conversations yet.
-                <br />Start a new chat above.
-              </div>
-            ) : (
-              Object.entries(grouped).map(([label, group]) => (
-                <div key={label} className="mb-3">
-                  <p className="text-aagni-muted text-xs px-3 py-1.5 tracking-wider uppercase">
-                    {label}
-                  </p>
-                  {group.map((chat) => (
-                    <motion.button
-                      key={chat.id}
-                      whileHover={{ backgroundColor: 'rgba(255,107,0,0.05)' }}
-                      onClick={() => router.push(`/chat/${chat.id}`)}
-                      className={`group w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-left transition-colors text-sm mb-0.5 ${
-                        currentChatId === chat.id
-                          ? 'bg-aagni-saffron/10 border border-aagni-saffron/20 text-aagni-text'
-                          : 'text-aagni-subtext hover:text-aagni-text'
-                      }`}
-                    >
-                      <span className="truncate flex-1">{truncate(chat.title, 28)}</span>
-                      <button
-                        onClick={(e) => deleteChat(e, chat.id)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded text-aagni-muted hover:text-red-400 transition-all"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    </motion.button>
-                  ))}
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* User section */}
-          {session?.user && (
-            <div className="p-3 border-t border-aagni-border">
-              <div className="flex items-center gap-2 p-2 rounded-xl hover:bg-white/5 transition-colors group">
-                {session.user.image ? (
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || 'User'}
-                    width={32}
-                    height={32}
-                    className="rounded-full ring-1 ring-aagni-saffron/30"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-aagni-saffron/20 flex items-center justify-center text-aagni-saffron text-sm font-bold">
-                    {session.user.name?.[0] || 'U'}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-aagni-text text-xs font-medium truncate">
-                    {session.user.name}
-                  </p>
-                  <p className="text-aagni-muted text-xs truncate">{session.user.email}</p>
-                </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: '/login' })}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded text-aagni-muted hover:text-red-400 transition-all"
-                  title="Sign out"
-                >
-                  <LogOut size={13} />
+              <div className="space-y-1">
+                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-aagni-muted hover:text-white transition-colors text-sm font-medium">
+                  <Search size={16} />
+                  <span>Search Chats</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-aagni-muted hover:text-white transition-colors text-sm font-medium">
+                  <Clock size={16} />
+                  <span>Recent Chats</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-aagni-muted hover:text-white transition-colors text-sm font-medium">
+                  <Pin size={16} />
+                  <span>Pinned Chats</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-aagni-muted hover:text-white transition-colors text-sm font-medium">
+                  <Folder size={16} />
+                  <span>Folders</span>
                 </button>
               </div>
             </div>
-          )}
-        </div>
-      </motion.aside>
 
-      {/* Collapsed toggle */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0 }}
-            onClick={onToggle}
-            className="fixed left-3 top-4 z-30 p-2 glass-strong rounded-lg border border-aagni-border text-aagni-subtext hover:text-aagni-saffron transition-colors"
-          >
-            <ChevronRight size={16} />
-          </motion.button>
-        )}
-      </AnimatePresence>
-    </>
+            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-2" />
+
+            {/* Chat History */}
+            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-6 no-scrollbar">
+              <div>
+                <p className="text-xs font-semibold text-aagni-muted uppercase tracking-wider mb-2 px-4">Today's Chats</p>
+                <div className="space-y-1">
+                  {loading ? (
+                    <div className="px-4 py-2 text-sm text-aagni-muted/50 animate-pulse">Loading...</div>
+                  ) : chats.length === 0 ? (
+                    <div className="px-4 py-2 text-sm text-aagni-muted/50">No chats yet</div>
+                  ) : (
+                    chats.map(chat => (
+                      <div
+                        key={chat.id}
+                        onClick={() => router.push(`/chat/${chat.id}`)}
+                        className={`group relative flex items-center justify-between px-4 py-2.5 rounded-xl cursor-pointer transition-all ${
+                          currentChatId === chat.id ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-aagni-muted hover:text-white/90'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <MessageSquare size={16} className="shrink-0 opacity-70" />
+                          <div className="flex flex-col overflow-hidden">
+                            <span className="text-sm font-medium truncate">{chat.title || 'New Conversation'}</span>
+                            <span className="text-[10px] opacity-50 truncate">{formatDate(chat.updatedAt)}</span>
+                          </div>
+                        </div>
+                        <div className="hidden group-hover:flex items-center gap-1 shrink-0 absolute right-2 bg-gradient-to-l from-[#0A0D1C] via-[#0A0D1C] to-transparent pl-4">
+                          <button className="p-1.5 hover:bg-white/10 rounded-md text-white/50 hover:text-white transition-colors">
+                            <MoreHorizontal size={14} />
+                          </button>
+                          <button onClick={(e) => deleteChat(e, chat.id)} className="p-1.5 hover:bg-red-500/20 rounded-md text-white/50 hover:text-red-400 transition-colors">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mt-2" />
+
+            {/* Profile Section */}
+            <div className="p-4 mt-auto">
+              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                    <Image
+                      src={session?.user?.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
+                      alt="User"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-white group-hover:text-aagni-saffron transition-colors">
+                      {session?.user?.name || 'User'}
+                    </span>
+                    <span className="text-[10px] text-aagni-saffron uppercase font-bold tracking-wider">AAGNI Pro</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="p-2 text-aagni-muted hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.aside>
+      )}
+    </AnimatePresence>
   )
 }
