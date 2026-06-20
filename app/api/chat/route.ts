@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
       ]
 
       const freeVisionModels = [
-        'openrouter/free', // Auto-routes to a free vision model if image is provided
         'nvidia/nemotron-nano-12b-v2-vl:free',
         'meta-llama/llama-3.2-11b-vision-instruct:free' // fallback just in case
       ]
