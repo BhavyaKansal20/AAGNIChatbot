@@ -138,7 +138,7 @@ export function MessageBubble({
             </div>
           )
         ) : (
-          <AagniOrb size={32} isSpeaking={isSpeaking} />
+          <AagniOrb size={40} isSpeaking={isSpeaking} />
         )}
       </div>
 

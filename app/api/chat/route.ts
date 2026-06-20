@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           'X-Title': 'Aagni AI',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.0-flash-exp:free',
+          model: 'qwen/qwen-vl-plus:free',
           messages: visionMessages,
         }),
       })
