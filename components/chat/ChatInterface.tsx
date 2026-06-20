@@ -216,7 +216,14 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
                 onSend={handleSend}
                 isLoading={isLoading}
                 disabled={false}
-                onVoiceMode={() => setVoiceModeOpen(true)}
+                onVoiceMode={() => {
+                  if (typeof window !== 'undefined' && window.speechSynthesis) {
+                    // iOS Mobile Safari Hack: Fire a blank utterance synchronously on user tap
+                    // to unlock the Web Speech API audio context for future async responses.
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(''))
+                  }
+                  setVoiceModeOpen(true)
+                }}
               />
             </div>
           </div>

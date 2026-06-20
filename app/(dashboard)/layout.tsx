@@ -10,9 +10,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
   const chatId = pathname.startsWith('/chat/') ? pathname.split('/chat/')[1] : undefined
 
+  useEffect(() => {
+    // Auto-close sidebar on mobile by default
+    const checkMobile = () => {
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false)
+      } else {
+        setSidebarOpen(true)
+      }
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-aagni-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#050816] flex items-center justify-center">
         <div className="flex items-center gap-3">
           {[0, 1, 2].map((i) => (
             <div
@@ -56,9 +70,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </svg>
       </button>
 
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       <main
-        className="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 relative z-10"
-        style={{ marginLeft: sidebarOpen ? 260 : 0 }}
+        className={`flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 relative z-10 ${sidebarOpen ? 'md:ml-[260px]' : 'ml-0'}`}
       >
         {children}
       </main>
