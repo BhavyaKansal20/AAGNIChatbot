@@ -1,17 +1,32 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Mic, PhoneOff, Settings2, Globe2 } from 'lucide-react'
 import { AagniOrb } from '@/components/effects/AagniOrb'
 
+type VoiceStatus = 'IDLE' | 'LISTENING' | 'THINKING' | 'SPEAKING'
+
 export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [status, setStatus] = useState<'IDLE' | 'LISTENING' | 'THINKING' | 'SPEAKING'>('IDLE')
-  const [transcript, setTranscript] = useState('')
+  const [status, setStatusState] = useState<VoiceStatus>('IDLE')
+  const [transcript, setTranscriptState] = useState('')
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([])
   
+  // Use refs to avoid stale closures in event listeners
+  const statusRef = useRef<VoiceStatus>('IDLE')
+  const transcriptRef = useRef('')
   const recognitionRef = useRef<any>(null)
   const synthRef = useRef<SpeechSynthesis | null>(null)
+
+  const setStatus = (s: VoiceStatus) => {
+    statusRef.current = s
+    setStatusState(s)
+  }
+
+  const setTranscript = (t: string) => {
+    transcriptRef.current = t
+    setTranscriptState(t)
+  }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -32,7 +47,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
         }
 
         recognition.onend = () => {
-          if (status === 'LISTENING') {
+          if (statusRef.current === 'LISTENING') {
             handleVoiceSubmit()
           }
         }
@@ -41,8 +56,11 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
       }
     }
     
-    return () => stopAll()
-  }, [status])
+    return () => {
+      if (recognitionRef.current) recognitionRef.current.abort()
+      if (synthRef.current) synthRef.current.cancel()
+    }
+  }, []) // Empty dependency array! Initialize only once.
 
   useEffect(() => {
     if (isOpen) {
@@ -53,7 +71,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
   }, [isOpen])
 
   const stopAll = () => {
-    if (recognitionRef.current) recognitionRef.current.stop()
+    if (recognitionRef.current) recognitionRef.current.abort()
     if (synthRef.current) synthRef.current.cancel()
     setStatus('IDLE')
   }
@@ -70,13 +88,14 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
   }
 
   const handleVoiceSubmit = async () => {
-    if (!transcript.trim()) {
+    const finalTranscript = transcriptRef.current
+    if (!finalTranscript.trim()) {
       setStatus('IDLE')
       return
     }
     
     setStatus('THINKING')
-    const userMsg = transcript
+    const userMsg = finalTranscript
     const newMessages = [...messages, { role: 'user', content: userMsg }]
     setMessages(newMessages)
     
@@ -87,7 +106,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newMessages,
-          chatId: null, // Voice mode can be ephemeral or you can pass active chatId
+          chatId: null,
           incognito: isIncognito,
         }),
       })
