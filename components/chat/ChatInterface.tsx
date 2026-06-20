@@ -70,7 +70,9 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
     setIsLoading(true)
 
     try {
-      const activeChatId = await ensureChatId()
+      const isIncognito = localStorage.getItem('aagni_incognito') === 'true'
+      const activeChatId = isIncognito ? null : await ensureChatId()
+      
       const apiMessages = messages.concat(userMessage).map((m) => ({
         role: m.role,
         content: m.content,
@@ -83,6 +85,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
           messages: apiMessages,
           chatId: activeChatId,
           imageData: imageData || null,
+          incognito: isIncognito,
         }),
       })
 
@@ -158,11 +161,23 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
       <div className="flex h-full overflow-hidden w-full relative">
         {/* Main chat area */}
         <div className="flex-1 flex flex-col h-full min-w-0">
-          {/* Top Navbar / Header area (Optional but good for spacing) */}
-          <div className="h-14 border-b border-white/5 flex items-center px-6 justify-between shrink-0">
+          {/* Top Navbar / Header area */}
+          <div className="h-14 flex items-center px-6 justify-between shrink-0 sticky top-0 z-10 bg-aagni-darkbg/80 backdrop-blur-md">
+            {/* Left placeholder for the absolute layout sidebar toggle */}
+            <div className="w-10 h-10" />
+            
             <h2 className="text-sm font-semibold text-white/90">AAGNI Chat</h2>
-            <button className="xl:hidden p-2 text-aagni-muted hover:text-white transition-colors">
-              <Settings size={18} />
+            
+            {/* Right Panel Toggle */}
+            <button 
+              onClick={() => setRightPanelOpen(!rightPanelOpen)}
+              className={`p-2 rounded-lg transition-colors ${rightPanelOpen ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
+              title="Toggle Utilities"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M15 3v18" />
+              </svg>
             </button>
           </div>
 

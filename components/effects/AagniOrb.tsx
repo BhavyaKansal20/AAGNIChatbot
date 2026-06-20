@@ -50,12 +50,11 @@ export function AagniOrb({ size = 60, isActive = false, isSpeaking = false }: Aa
             background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.3) 0%, transparent 60%)',
           }}
         />
-        <span
-          className="relative z-10 text-white/90 font-bold select-none"
-          style={{ fontSize: size * 0.38, lineHeight: 1 }}
-        >
-          ॐ
-        </span>
+        <img
+          src="/logo.png"
+          alt="AAGNI"
+          className="relative z-10 w-[45%] h-[45%] object-contain drop-shadow-lg"
+        />
       </motion.div>
     </div>
   )

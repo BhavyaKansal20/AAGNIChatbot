@@ -45,7 +45,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
             transition={{ delay: 0.1 }}
             className="text-3xl md:text-4xl font-bold text-white font-serif mb-3 tracking-wide"
           >
-            What can I help you build today?
+            Hello! Welcome back, {userName ? userName.split(' ')[0] : 'Builder'}.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -53,7 +53,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
             transition={{ delay: 0.2 }}
             className="text-white/60 text-lg font-medium"
           >
-            Chat, Research, Create, Analyze, and Automate.
+            What can I help you build today?
           </motion.p>
         </div>
 

@@ -29,10 +29,18 @@ export function Sidebar({
   const router = useRouter()
   const [chats, setChats] = useState<Chat[]>([])
   const [loading, setLoading] = useState(true)
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [incognitoMode, setIncognitoMode] = useState(false)
 
   useEffect(() => {
     if (session) fetchChats()
+    const saved = localStorage.getItem('aagni_incognito')
+    if (saved) setIncognitoMode(JSON.parse(saved))
   }, [session])
+
+  useEffect(() => {
+    localStorage.setItem('aagni_incognito', JSON.stringify(incognitoMode))
+  }, [incognitoMode])
 
   const fetchChats = async () => {
     try {
@@ -145,9 +153,48 @@ export function Sidebar({
 
             <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mt-2" />
 
-            {/* Profile Section */}
-            <div className="p-4 mt-auto">
-              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+            {/* Profile Section & Dropdown Menu */}
+            <div className="p-4 mt-auto relative">
+              <AnimatePresence>
+                {profileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute bottom-full left-4 right-4 mb-2 p-2 rounded-2xl dark-glass-panel border border-white/10 shadow-2xl flex flex-col gap-1 z-50"
+                  >
+                    <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-colors w-full text-left">
+                      <Settings size={16} />
+                      <span className="text-sm font-medium">Settings</span>
+                    </button>
+                    <button 
+                      onClick={() => setIncognitoMode(!incognitoMode)}
+                      className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-colors w-full text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+                        <span className="text-sm font-medium">Incognito Mode</span>
+                      </div>
+                      <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${incognitoMode ? 'bg-aagni-saffron' : 'bg-white/20'}`}>
+                        <div className={`w-3 h-3 rounded-full bg-white transition-transform ${incognitoMode ? 'translate-x-4' : 'translate-x-0'}`} />
+                      </div>
+                    </button>
+                    <div className="h-[1px] w-full bg-white/10 my-1" />
+                    <button 
+                      onClick={() => signOut({ callbackUrl: '/' })}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/20 text-red-400/80 hover:text-red-400 transition-colors w-full text-left"
+                    >
+                      <LogOut size={16} />
+                      <span className="text-sm font-medium">Log out</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div 
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="flex items-center justify-between p-3 rounded-[20px] bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group"
+              >
                 <div className="flex items-center gap-3">
                   <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
                     <Image
@@ -161,14 +208,13 @@ export function Sidebar({
                     <span className="text-sm font-medium text-white group-hover:text-aagni-saffron transition-colors">
                       {session?.user?.name || 'User'}
                     </span>
-                    <span className="text-[10px] text-aagni-saffron uppercase font-bold tracking-wider">AAGNI Pro</span>
+                    <span className="text-[10px] text-aagni-saffron uppercase font-bold tracking-wider">
+                      {incognitoMode ? 'Incognito' : 'AAGNI Pro'}
+                    </span>
                   </div>
                 </div>
-                <button 
-                  onClick={() => signOut({ callbackUrl: '/' })}
-                  className="p-2 text-aagni-muted hover:text-white hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <LogOut size={16} />
+                <button className="p-2 text-aagni-muted group-hover:text-white rounded-full transition-colors">
+                  <MoreHorizontal size={16} />
                 </button>
               </div>
             </div>

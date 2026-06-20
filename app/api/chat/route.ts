@@ -16,9 +16,7 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const { messages, chatId, imageData } = await req.json()
-
+  const { messages, chatId, imageData, incognito } = await req.json()
   if (!messages || !Array.isArray(messages)) {
     return NextResponse.json({ error: 'Messages required' }, { status: 400 })
   }
@@ -27,7 +25,7 @@ export async function POST(req: NextRequest) {
     let aiResponse: string
 
     if (imageData) {
-      // Vision mode — OpenRouter with Gemini
+      // Vision mode — OpenRouter Free Model Fallback
       const visionMessages = [
         {
           role: 'user',
@@ -47,7 +45,7 @@ export async function POST(req: NextRequest) {
           'X-Title': 'Aagni AI',
         },
         body: JSON.stringify({
-          model: 'google/gemini-flash-1.5-exp',
+          model: 'meta-llama/llama-3.2-11b-vision-instruct:free',
           messages: visionMessages,
         }),
       })
@@ -58,12 +56,12 @@ export async function POST(req: NextRequest) {
       }
 
       const orData = await orRes.json()
-      aiResponse = orData.choices?.[0]?.message?.content || 'Could not process the image.'
+      aiResponse = orData.choices?.[0]?.message?.content || 'No vision response.'
     } else {
       // Text mode — Sarvam
       const apiMessages = [
         { role: 'system', content: SYSTEM_PROMPT },
-        ...messages.slice(-20).map((m: { role: string; content: string }) => ({
+        ...messages.map((m: any) => ({
           role: m.role,
           content: m.content,
         })),
@@ -92,8 +90,8 @@ export async function POST(req: NextRequest) {
       aiResponse = sarvamData.choices?.[0]?.message?.content || 'No response from Aagni.'
     }
 
-    // Persist messages if chatId provided
-    if (chatId) {
+    // Persist messages if chatId provided and not in incognito mode
+    if (chatId && !incognito) {
       const userMessage = messages[messages.length - 1]
       await prisma.message.createMany({
         data: [
