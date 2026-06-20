@@ -32,15 +32,16 @@ export async function POST(req: NextRequest) {
       let aiResponseFromVision = ''
 
       // Attempt 1: Direct Gemini API (Lightning Fast & 100% Free Tier 15 RPM)
+      let geminiFailReason = ''
       if (process.env.GEMINI_API_KEY) {
         try {
-          const match = imageData.match(/^data:(image\/[a-zA-Z]+);base64,(.+)$/)
+          const match = imageData.match(/^data:(image\/[a-zA-Z0-9\+\-]+);base64,(.+)$/)
           if (match) {
             const mimeType = match[1]
             const base64Data = match[2]
 
             const geminiRes = await fetch(
-              `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
               {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -62,14 +63,23 @@ export async function POST(req: NextRequest) {
               const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
               if (geminiText) {
                 aiResponseFromVision = geminiText
+              } else {
+                geminiFailReason = 'Gemini returned 200 OK but empty text.'
               }
             } else {
-              console.warn('[Vision] Direct Gemini API failed:', await geminiRes.text())
+              const errText = await geminiRes.text()
+              geminiFailReason = `Gemini HTTP ${geminiRes.status}: ${errText}`
+              console.warn('[Vision] Direct Gemini API failed:', errText)
             }
+          } else {
+            geminiFailReason = 'Image data format did not match expected base64 regex.'
           }
         } catch (e: any) {
+          geminiFailReason = `Gemini Exception: ${e.message}`
           console.warn('[Vision] Direct Gemini API threw error:', e.message)
         }
+      } else {
+        geminiFailReason = 'GEMINI_API_KEY is missing from environment variables.'
       }
 
       // Attempt 2: Fallback to OpenRouter (Slow / Broken free tier)
@@ -130,7 +140,7 @@ export async function POST(req: NextRequest) {
         }
 
         if (!aiResponseFromVision) {
-          aiResponseFromVision = `No vision response. Please add GEMINI_API_KEY to your .env file for guaranteed free & fast image scanning. OpenRouter error: ${lastError}`
+          aiResponseFromVision = `No vision response. Gemini Error: ${geminiFailReason} | OpenRouter Error: ${lastError}`
         }
       }
       
