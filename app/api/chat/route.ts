@@ -36,26 +36,51 @@ export async function POST(req: NextRequest) {
         },
       ]
 
-      const orRes = await fetch(OPENROUTER_API, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'HTTP-Referer': process.env.AUTH_URL || 'http://localhost:3000',
-          'X-Title': 'Aagni AI',
-        },
-        body: JSON.stringify({
-          model: 'qwen/qwen-vl-plus:free',
-          messages: visionMessages,
-        }),
-      })
+      const freeVisionModels = [
+        'meta-llama/llama-3.2-90b-vision-instruct:free',
+        'mistralai/pixtral-12b:free',
+        'qwen/qwen-2-vl-72b-instruct:free',
+        'google/gemini-2.0-pro-exp-02-05:free',
+        'google/gemini-2.0-flash-lite-preview-02-05:free'
+      ]
 
-      if (!orRes.ok) {
-        const err = await orRes.text()
-        throw new Error(`OpenRouter error: ${err}`)
+      let orData = null
+      let lastError = ''
+
+      for (const modelSlug of freeVisionModels) {
+        try {
+          const orRes = await fetch(OPENROUTER_API, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+              'HTTP-Referer': process.env.AUTH_URL || 'http://localhost:3000',
+              'X-Title': 'Aagni AI',
+            },
+            body: JSON.stringify({
+              model: modelSlug,
+              messages: visionMessages,
+            }),
+          })
+
+          if (orRes.ok) {
+            orData = await orRes.json()
+            break // Success! Exit the loop
+          } else {
+            const errText = await orRes.text()
+            console.warn(`[Vision] Model ${modelSlug} failed:`, errText)
+            lastError = errText
+          }
+        } catch (e: any) {
+          console.warn(`[Vision] Model ${modelSlug} threw error:`, e.message)
+          lastError = e.message
+        }
       }
 
-      const orData = await orRes.json()
+      if (!orData) {
+        throw new Error(`All free OpenRouter vision models failed. Last error: ${lastError}`)
+      }
+
       aiResponse = orData.choices?.[0]?.message?.content || 'No vision response.'
     } else {
       // Text mode — Sarvam
