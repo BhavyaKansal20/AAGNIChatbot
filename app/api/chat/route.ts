@@ -37,11 +37,9 @@ export async function POST(req: NextRequest) {
       ]
 
       const freeVisionModels = [
-        'meta-llama/llama-3.2-90b-vision-instruct:free',
-        'mistralai/pixtral-12b:free',
-        'qwen/qwen-2-vl-72b-instruct:free',
-        'google/gemini-2.0-pro-exp-02-05:free',
-        'google/gemini-2.0-flash-lite-preview-02-05:free'
+        'openrouter/free', // Auto-routes to a free vision model if image is provided
+        'nvidia/nemotron-nano-12b-v2-vl:free',
+        'meta-llama/llama-3.2-11b-vision-instruct:free' // fallback just in case
       ]
 
       let orData = null
