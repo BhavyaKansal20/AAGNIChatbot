@@ -66,14 +66,6 @@ export default function LandingPage() {
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-white via-gray-100 to-white group-hover:scale-110 transition-transform duration-500" />
               <span className="relative z-10">Access Dashboard</span>
             </Link>
-            
-            <Link
-              href="https://github.com/BhavyaKansal20/AAGNIChatbot"
-              target="_blank"
-              className="px-10 py-5 w-full sm:w-auto rounded-full font-semibold text-lg text-white glass-pill hover:bg-white/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]"
-            >
-              View on GitHub
-            </Link>
           </div>
         </motion.div>
 

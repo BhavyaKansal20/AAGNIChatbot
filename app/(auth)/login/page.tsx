@@ -2,135 +2,97 @@
 import { signIn } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { AagniOrb } from '@/components/effects/AagniOrb'
-import { OmSymbol } from '@/components/ui/IndianIcons'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-aagni-bg relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center bg-aagni-darkbg relative overflow-hidden dark-premium font-serif text-white">
       
-      {/* Background radial glow */}
-      <div className="absolute inset-0 bg-saffron-glow opacity-40" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-orange-900/20 to-transparent rounded-full blur-3xl" />
-      
-      {/* Decorative grid */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: 'linear-gradient(rgba(255,107,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,107,0,0.5) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
+      {/* Massive Dark Premium Background Effects */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#0A0D1C] to-[#050816] opacity-90" />
+        
+        {/* Animated Neon Orbs */}
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-aagni-saffron/20 rounded-full blur-[140px] mix-blend-screen animate-pulse-glow" 
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px] mix-blend-screen animate-pulse-glow" 
+        />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-md px-6"
       >
-        {/* Logo block */}
-        <div className="flex flex-col items-center mb-10">
-          <motion.div
-            animate={{ filter: ['drop-shadow(0 0 20px rgba(255,107,0,0.6))', 'drop-shadow(0 0 35px rgba(255,140,0,0.8))', 'drop-shadow(0 0 20px rgba(255,107,0,0.6))'] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-            className="mb-5"
-          >
-            <AagniOrb size={80} />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex items-center gap-2 mb-2"
-          >
-            <OmSymbol className="w-6 h-6 text-aagni-gold opacity-70" />
-            <h1 className="text-4xl font-bold tracking-tight text-saffron-gradient">
-              Aagni AI
-            </h1>
-            <OmSymbol className="w-6 h-6 text-aagni-gold opacity-70" />
-          </motion.div>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-aagni-subtext text-center text-sm tracking-widest uppercase"
-          >
-            India's Intelligent Assistant
-          </motion.p>
-        </div>
-
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="glass-strong rounded-2xl p-8 border-saffron-glow"
-        >
-          <h2 className="text-xl text-aagni-text text-center mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-aagni-subtext text-center text-sm mb-8">
-            Sign in to continue your conversation with Aagni
-          </p>
-
-          <div className="space-y-3">
-            <motion.button
-              whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(255,107,0,0.3)' }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-              className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl bg-white/5 border border-white/10 hover:border-aagni-saffron/40 text-aagni-text transition-all duration-300"
+        <div className="dark-glass-panel border border-white/10 rounded-[32px] p-8 md:p-12 shadow-2xl backdrop-blur-2xl text-center">
+          {/* Logo block */}
+          <div className="flex flex-col items-center mb-8">
+            <motion.div
+              animate={{ filter: ['drop-shadow(0 0 20px rgba(255,122,26,0.3))', 'drop-shadow(0 0 35px rgba(255,122,26,0.5))', 'drop-shadow(0 0 20px rgba(255,122,26,0.3))'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="mb-6 relative w-24 h-24 rounded-full border border-white/20 bg-white/5 flex items-center justify-center p-2 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
             >
-              <GoogleIcon />
-              <span className="font-medium">Continue with Google</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(255,107,0,0.3)' }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
-              className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl bg-white/5 border border-white/10 hover:border-aagni-saffron/40 text-aagni-text transition-all duration-300"
+              <AagniOrb size={80} />
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-aagni-saffron via-orange-400 to-yellow-500 mb-2 drop-shadow-lg"
             >
-              <GitHubIcon />
-              <span className="font-medium">Continue with GitHub</span>
-            </motion.button>
+              AAGNI AI
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-white/50 text-sm tracking-widest uppercase font-semibold"
+            >
+              Personal AI Hub
+            </motion.p>
           </div>
 
-          <p className="text-aagni-subtext text-center text-xs mt-6 leading-relaxed">
-            By continuing, you agree to Aagni AI's terms of service.
-            <br />Your chats are encrypted and private.
-          </p>
-        </motion.div>
+          <div className="space-y-4 mb-8">
+            <h2 className="text-xl font-medium text-white/90">Welcome Back</h2>
+            <p className="text-sm text-white/60">Sign in to access your secure dashboard.</p>
+          </div>
 
-        {/* Footer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-center text-aagni-muted text-xs mt-8"
-        >
-          Powered by Sarvam AI · Built in India 🇮🇳
-        </motion.p>
+          <div className="space-y-4">
+            <button
+              onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-white font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] group"
+            >
+              <svg className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
+
+            <button
+              onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-black hover:bg-gray-200 border border-transparent rounded-2xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] group"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 10 0 0 12 2z" />
+              </svg>
+              <span>Continue with GitHub</span>
+            </button>
+          </div>
+
+          <div className="mt-8 text-xs text-white/40">
+            <p>By continuing, you agree to AAGNI AI's terms of service.</p>
+            <p className="mt-1">All connections are encrypted and private.</p>
+          </div>
+        </div>
       </motion.div>
     </div>
-  )
-}
-
-function GoogleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-      <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-    </svg>
-  )
-}
-
-function GitHubIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-    </svg>
   )
 }

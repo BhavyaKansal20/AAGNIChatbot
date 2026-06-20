@@ -26,34 +26,29 @@ export function AagniOrb({ size = 60, isActive = false, isSpeaking = false }: Aa
           />
         </>
       )}
+      
+      {/* Outer subtle glow instead of heavy orange circle */}
+      <div 
+        className="absolute rounded-full bg-aagni-saffron/20 blur-xl animate-pulse-glow pointer-events-none"
+        style={{ width: size * 1.2, height: size * 1.2 }}
+      />
+      
       <motion.div
-        className="relative rounded-full flex items-center justify-center overflow-hidden"
+        className="relative rounded-full flex items-center justify-center dark-glass-panel border-2 border-white/20 bg-white/5 backdrop-blur-md overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]"
         style={{ width: size, height: size }}
         animate={
           isSpeaking
-            ? { scale: [1, 1.08, 1] }
+            ? { scale: [1, 1.08, 1], boxShadow: ['0 0 20px rgba(255,255,255,0.1)', '0 0 40px rgba(255,122,26,0.3)', '0 0 20px rgba(255,255,255,0.1)'] }
             : isActive
             ? { scale: [1, 1.04, 1] }
             : {}
         }
         transition={{ duration: isSpeaking ? 0.6 : 2, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle at 35% 35%, #FF8C00, #FF6B00 40%, #D4A017 70%, #8B0000 100%)',
-          }}
-        />
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.3) 0%, transparent 60%)',
-          }}
-        />
         <img
           src="/logo.png"
           alt="AAGNI"
-          className="relative z-10 w-[45%] h-[45%] object-contain drop-shadow-lg"
+          className="relative z-10 w-[70%] h-[70%] object-contain drop-shadow-md"
         />
       </motion.div>
     </div>
@@ -67,21 +62,16 @@ export function VoiceWaveform({ isActive }: { isActive: boolean }) {
       {heights.map((h, i) => (
         <motion.div
           key={i}
-          className="w-[3px] rounded-full"
-          style={{
-            background: 'linear-gradient(to top, #FF6B00, #D4A017)',
-            height: '100%',
-            transformOrigin: 'bottom',
-          }}
+          className="w-1 rounded-full bg-aagni-saffron"
           animate={
             isActive
-              ? { scaleY: [0.2, h / 100, 0.2], opacity: [0.6, 1, 0.6] }
-              : { scaleY: 0.15, opacity: 0.3 }
+              ? { height: [`${h * 0.4}%`, `${h}%`, `${h * 0.4}%`] }
+              : { height: '10%' }
           }
           transition={{
-            duration: isActive ? 0.4 + (i % 4) * 0.15 : 0.3,
+            duration: 0.8,
             repeat: Infinity,
-            delay: i * 0.06,
+            delay: i * 0.05,
             ease: 'easeInOut',
           }}
         />
