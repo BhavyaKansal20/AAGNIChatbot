@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
           'api-subscription-key': process.env.SARVAM_API_KEY!,
         },
         body: JSON.stringify({
-          model: 'sarvam-105b',
+          model: 'sarvam-30b',
           messages: apiMessages,
           temperature: 0.7,
           max_tokens: 2048,
