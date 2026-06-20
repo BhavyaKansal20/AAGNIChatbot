@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             const base64Data = match[2]
 
             const geminiRes = await fetch(
-              `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
               {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
