@@ -11,6 +11,8 @@ You respond in a warm, precise, and intelligent manner. You can speak in Hindi, 
 When generating code, always wrap it in proper markdown code blocks with the language specified.
 Be helpful, accurate, and celebrate India's rich heritage while being globally knowledgeable.`
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
