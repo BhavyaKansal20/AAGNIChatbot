@@ -90,8 +90,14 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
       })
 
       if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Failed to get response')
+        const contentType = res.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const err = await res.json()
+          throw new Error(err.error || `Error ${res.status}: Failed to get response`)
+        } else {
+          const errText = await res.text()
+          throw new Error(`Error ${res.status}: ${errText.slice(0, 100)}...`)
+        }
       }
 
       const data = await res.json()
