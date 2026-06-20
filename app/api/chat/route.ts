@@ -25,60 +25,114 @@ export async function POST(req: NextRequest) {
     let aiResponse: string
 
     if (imageData) {
-      // Vision mode — OpenRouter Free Model Fallback
-      const visionMessages = [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: messages[messages.length - 1]?.content || 'Describe this image.' },
-            { type: 'image_url', image_url: { url: imageData } },
-          ],
-        },
-      ]
+      // Vision mode
+      const userMessageText = messages[messages.length - 1]?.content || 'Describe this image.'
+      let aiResponseFromVision = ''
 
-      const freeVisionModels = [
-        'nvidia/nemotron-nano-12b-v2-vl:free',
-        'meta-llama/llama-3.2-11b-vision-instruct:free' // fallback just in case
-      ]
-
-      let orData = null
-      let lastError = ''
-
-      for (const modelSlug of freeVisionModels) {
+      // Attempt 1: Direct Gemini API (Lightning Fast & 100% Free Tier 15 RPM)
+      if (process.env.GEMINI_API_KEY) {
         try {
-          const orRes = await fetch(OPENROUTER_API, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-              'HTTP-Referer': process.env.AUTH_URL || 'http://localhost:3000',
-              'X-Title': 'Aagni AI',
-            },
-            body: JSON.stringify({
-              model: modelSlug,
-              messages: visionMessages,
-            }),
-          })
+          const match = imageData.match(/^data:(image\/[a-zA-Z]+);base64,(.+)$/)
+          if (match) {
+            const mimeType = match[1]
+            const base64Data = match[2]
 
-          if (orRes.ok) {
-            orData = await orRes.json()
-            break // Success! Exit the loop
-          } else {
-            const errText = await orRes.text()
-            console.warn(`[Vision] Model ${modelSlug} failed:`, errText)
-            lastError = errText
+            const geminiRes = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [
+                        { text: userMessageText },
+                        { inline_data: { mime_type: mimeType, data: base64Data } }
+                      ]
+                    }
+                  ]
+                })
+              }
+            )
+
+            if (geminiRes.ok) {
+              const gData = await geminiRes.json()
+              const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
+              if (geminiText) {
+                aiResponseFromVision = geminiText
+              }
+            } else {
+              console.warn('[Vision] Direct Gemini API failed:', await geminiRes.text())
+            }
           }
         } catch (e: any) {
-          console.warn(`[Vision] Model ${modelSlug} threw error:`, e.message)
-          lastError = e.message
+          console.warn('[Vision] Direct Gemini API threw error:', e.message)
         }
       }
 
-      if (!orData) {
-        throw new Error(`All free OpenRouter vision models failed. Last error: ${lastError}`)
-      }
+      // Attempt 2: Fallback to OpenRouter (Slow / Broken free tier)
+      if (!aiResponseFromVision) {
+        const visionMessages = [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: userMessageText },
+              { type: 'image_url', image_url: { url: imageData } },
+            ],
+          },
+        ]
 
-      aiResponse = orData.choices?.[0]?.message?.content || 'No vision response.'
+        const freeVisionModels = [
+          'nvidia/nemotron-nano-12b-v2-vl:free',
+          'meta-llama/llama-3.2-11b-vision-instruct:free' // fallback just in case
+        ]
+
+        let orData = null
+        let lastError = ''
+
+        for (const modelSlug of freeVisionModels) {
+          try {
+            const orRes = await fetch(OPENROUTER_API, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                'HTTP-Referer': process.env.AUTH_URL || 'http://localhost:3000',
+                'X-Title': 'Aagni AI',
+              },
+              body: JSON.stringify({
+                model: modelSlug,
+                messages: visionMessages,
+              }),
+            })
+
+            if (orRes.ok) {
+              orData = await orRes.json()
+              const textContent = orData.choices?.[0]?.message?.content
+              if (textContent) {
+                aiResponseFromVision = textContent
+                break // Success! Exit the loop
+              } else {
+                lastError = 'Model returned 200 OK but empty content.'
+                console.warn(`[Vision] Model ${modelSlug} returned empty content.`)
+              }
+            } else {
+              const errText = await orRes.text()
+              console.warn(`[Vision] Model ${modelSlug} failed:`, errText)
+              lastError = errText
+            }
+          } catch (e: any) {
+            console.warn(`[Vision] Model ${modelSlug} threw error:`, e.message)
+            lastError = e.message
+          }
+        }
+
+        if (!aiResponseFromVision) {
+          aiResponseFromVision = `No vision response. Please add GEMINI_API_KEY to your .env file for guaranteed free & fast image scanning. OpenRouter error: ${lastError}`
+        }
+      }
+      
+      aiResponse = aiResponseFromVision
     } else {
       // Text mode — Sarvam
       const apiMessages = [
