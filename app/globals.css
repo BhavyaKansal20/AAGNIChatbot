@@ -148,6 +148,40 @@ body {
 }
 
 /* Section divider — subtle warm line */
+.clay-bubble-user {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-bottom: 2px solid #FF7A1A; /* Saffron base */
+  border-right: 1px solid rgba(255, 122, 26, 0.3);
+  box-shadow: 
+    4px 4px 12px rgba(255, 122, 26, 0.08),
+    -4px -4px 12px rgba(255, 255, 255, 1),
+    inset 2px 2px 5px rgba(255, 255, 255, 1),
+    inset -2px -2px 5px rgba(26, 31, 59, 0.03);
+  color: #1A1F3B;
+  border-radius: 20px;
+  border-top-right-radius: 4px;
+}
+
+.clay-bubble-ai {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-left: 2px solid #3E66FF; /* Ashoka Blue */
+  border-bottom: 2px solid #009B4D; /* Green */
+  box-shadow: 
+    4px 4px 12px rgba(0, 155, 77, 0.06),
+    -4px -4px 12px rgba(255, 255, 255, 1),
+    inset 2px 2px 5px rgba(255, 255, 255, 1),
+    inset -2px -2px 5px rgba(26, 31, 59, 0.03);
+  color: #1A1F3B;
+  border-radius: 20px;
+  border-top-left-radius: 4px;
+}
+
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(26, 31, 59, 0.08) 50%, transparent 100%);

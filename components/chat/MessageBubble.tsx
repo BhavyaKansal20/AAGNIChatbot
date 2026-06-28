@@ -158,10 +158,10 @@ export function MessageBubble({
         {/* Text bubble */}
         {message.content && (
           <div
-            className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+            className={`px-5 py-3.5 text-[15px] leading-relaxed font-medium ${
               isUser
-                ? 'bg-gradient-to-br from-aagni-saffron to-aagni-orange border border-aagni-saffron/20 text-white shadow-[0_4px_15px_rgba(255,122,26,0.2)] rounded-tr-sm'
-                : 'bg-white/80 backdrop-blur-xl border border-white text-[#1A1F3B] shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-tl-sm prose-aagni'
+                ? 'clay-bubble-user'
+                : 'clay-bubble-ai prose-aagni'
             }`}
           >
             {isUser ? (
