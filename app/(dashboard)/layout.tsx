@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen relative z-10 flex overflow-hidden h-screen text-[#1A1F3B] selection:bg-aagni-saffron/30 selection:text-[#1A1F3B]">
+    <div className="min-h-screen relative z-10 flex overflow-hidden h-[100dvh] text-[#1A1F3B] selection:bg-aagni-saffron/30 selection:text-[#1A1F3B]">
 
       <Sidebar
         isOpen={sidebarOpen}
@@ -71,7 +71,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </button>
 
       <main
-        className={`flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 relative z-10 ${sidebarOpen ? 'md:ml-[260px]' : 'ml-0'}`}
+        className={`flex-1 flex flex-col h-[100dvh] overflow-hidden transition-all duration-300 relative z-10 ${sidebarOpen ? 'md:ml-[260px]' : 'ml-0'}`}
       >
         {children}
       </main>

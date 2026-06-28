@@ -28,7 +28,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
         
         {/* Orb */}
         <motion.div
-          animate={{ filter: ['drop-shadow(0 0 20px rgba(255,122,26,0.2))', 'drop-shadow(0 0 40px rgba(62,102,255,0.2))', 'drop-shadow(0 0 20px rgba(0,155,77,0.2))'] }}
+          animate={{ boxShadow: ['0px 0px 20px rgba(255,122,26,0.2)', '0px 0px 40px rgba(62,102,255,0.2)', '0px 0px 20px rgba(0,155,77,0.2)'] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           className="relative flex justify-center mb-6 md:mb-10 bg-white/50 p-3 rounded-full border border-white shadow-sm"
         >
