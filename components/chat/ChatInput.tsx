@@ -137,18 +137,18 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mb-3 flex items-center gap-3 px-4 py-2 glass-strong rounded-xl border border-aagni-saffron/30"
+            className="mb-3 flex items-center gap-3 px-4 py-2 bg-white/60 backdrop-blur-xl shadow-sm rounded-xl border border-white"
           >
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             {isRecording ? (
               <>
                 <VoiceWaveform isActive />
-                <span className="text-aagni-text text-sm">Recording… tap mic to stop</span>
+                <span className="text-[#1A1F3B] text-sm">Recording… tap mic to stop</span>
               </>
             ) : (
               <>
                 <Loader2 size={14} className="text-aagni-saffron animate-spin" />
-                <span className="text-aagni-subtext text-sm">Transcribing your voice…</span>
+                <span className="text-[#1A1F3B]/70 text-sm font-medium">Transcribing your voice…</span>
               </>
             )}
           </motion.div>
@@ -156,7 +156,7 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
       </AnimatePresence>
 
       {/* Input box */}
-      <div className="glass-strong rounded-2xl border border-aagni-border focus-within:border-aagni-saffron/40 transition-colors overflow-hidden">
+      <div className="bg-white/60 backdrop-blur-xl rounded-[24px] border border-white shadow-[0_8px_32px_rgba(0,0,0,0.04)] focus-within:shadow-md transition-all overflow-hidden relative" style={{ boxShadow: '0 20px 40px rgba(255,122,30,.05), 0 30px 60px rgba(62,102,255,.03), 0 40px 80px rgba(0,155,77,.02)' }}>
         <textarea
           ref={textareaRef}
           value={text}
@@ -165,7 +165,7 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
           placeholder="Ask Aagni anything… (Shift+Enter for new line)"
           disabled={isLoading || disabled || isRecording}
           rows={1}
-          className="w-full bg-transparent px-4 pt-4 pb-2 text-sm text-aagni-text placeholder:text-aagni-muted resize-none outline-none leading-relaxed"
+          className="w-full bg-transparent px-5 pt-5 pb-3 text-sm text-[#1A1F3B] font-medium placeholder:text-[#1A1F3B]/40 resize-none outline-none leading-relaxed"
           style={{ minHeight: 56, maxHeight: 180 }}
         />
 
@@ -178,7 +178,7 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
               whileTap={{ scale: 0.95 }}
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading || isRecording}
-              className="p-2 rounded-xl text-aagni-muted hover:text-aagni-saffron hover:bg-aagni-saffron/5 transition-colors disabled:opacity-40"
+              className="p-2 rounded-xl text-[#1A1F3B]/50 hover:text-aagni-saffron hover:bg-white transition-colors disabled:opacity-40"
               title="Attach image"
             >
               <ImagePlus size={18} />
@@ -198,12 +198,12 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
                 whileTap={{ scale: 0.95 }}
                 onClick={onVoiceMode}
                 disabled={isLoading || isRecording || isTranscribing}
-                className="p-2 rounded-xl text-aagni-muted hover:text-aagni-saffron hover:bg-aagni-saffron/5 transition-colors disabled:opacity-40"
+                className="p-2 rounded-xl text-[#1A1F3B]/50 hover:text-aagni-saffron hover:bg-white transition-colors disabled:opacity-40"
                 title="Open Voice Mode"
               >
                 <div className="relative">
                   <Mic size={18} />
-                  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-aagni-saffron rounded-full border border-aagni-darkbg" />
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-aagni-saffron rounded-full border border-white" />
                 </div>
               </motion.button>
             )}
@@ -216,8 +216,8 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
               disabled={isLoading || isTranscribing}
               className={`p-2 rounded-xl transition-colors disabled:opacity-40 ${
                 isRecording
-                  ? 'text-red-400 bg-red-400/10 hover:bg-red-400/15'
-                  : 'text-aagni-muted hover:text-white hover:bg-white/5'
+                  ? 'text-red-500 bg-red-500/10 hover:bg-red-500/20'
+                  : 'text-[#1A1F3B]/50 hover:text-[#1A1F3B] hover:bg-white'
               }`}
               title={isRecording ? 'Stop recording' : 'Record voice note'}
             >
@@ -233,8 +233,8 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
             disabled={!canSend}
             className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all ${
               canSend
-                ? 'bg-gradient-to-br from-aagni-saffron to-aagni-ember text-white shadow-saffron'
-                : 'bg-aagni-border text-aagni-muted cursor-not-allowed'
+                ? 'bg-gradient-to-br from-aagni-saffron to-aagni-orange text-white shadow-[0_4px_15px_rgba(255,122,26,0.3)] hover:shadow-[0_6px_20px_rgba(255,122,26,0.4)]'
+                : 'bg-white/50 text-[#1A1F3B]/30 border border-white cursor-not-allowed'
             }`}
           >
             {isLoading ? (
@@ -246,7 +246,7 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
         </div>
       </div>
 
-      <p className="text-center text-aagni-muted text-xs mt-2">
+      <p className="text-center text-[#1A1F3B]/50 font-medium text-xs mt-3">
         Aagni can make mistakes. Verify important information.
       </p>
     </div>

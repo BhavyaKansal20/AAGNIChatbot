@@ -8,10 +8,12 @@
   padding: 0;
 }
 
-/* Light Theme Default (Landing, Auth, Legal) */
+/* =========================================
+   WARM CREAM BASE THEME (Landing, Auth, Legal)
+   ========================================= */
 body {
-  background-color: #F8F8FA;
-  color: #23294D; /* Deep Indigo */
+  background-color: #FBF8F3;
+  color: #1A1F3B;
   font-family: 'Times New Roman', Times, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19,48 +21,115 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Custom Scrollbar for Light */
+/* Custom Scrollbar — Warm Cream */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #FFD6B2; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #FF7A1A; }
 
-/* Dashboard Dark Premium Scope */
-.dark-premium {
-  background-color: #050816 !important;
-  color: #E2E8F0 !important;
+/* =========================================
+   LANDING PAGE — WARM CREAM GLASS UTILITIES
+   ========================================= */
+
+/* Landing page scroll enabler */
+.landing-page {
+  overflow-y: auto !important;
 }
-.dark-premium ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-.dark-premium ::-webkit-scrollbar-thumb:hover { background: #FF7A1A; }
 
-/* ---------------------------------
-   LIGHT THEME UTILITIES (Landing)
----------------------------------- */
+/* Background presets */
+.bg-aagni-bg {
+  background-color: #FBF8F3;
+}
 
-.glass-pill {
-  background: rgba(255, 255, 255, 0.6);
+.bg-indian-hero {
+  background: 
+    radial-gradient(ellipse 120% 80% at 50% 30%, rgba(174, 191, 255, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 70% at 50% 50%, rgba(255, 138, 28, 0.3) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 60% at 50% 70%, rgba(255, 122, 26, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #FBF8F3 0%, #FBF8F3 100%);
+}
+
+.bg-indian-gradient-soft {
+  background: linear-gradient(180deg, #FBF8F3 0%, #F5F0E8 50%, #FBF8F3 100%);
+}
+
+/* Glassmorphism for landing — warm ivory */
+.glass-landing {
+  background: rgba(255, 252, 247, 0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 20px rgba(35, 41, 77, 0.05);
+  border: 1px solid rgba(26, 31, 59, 0.06);
+  box-shadow: 0 2px 20px -4px rgba(26, 31, 59, 0.05);
 }
 
+.glass-landing-hover:hover {
+  background: rgba(255, 252, 247, 0.85);
+  box-shadow: 0 12px 40px -8px rgba(26, 31, 59, 0.08);
+  transform: translateY(-2px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pill-shaped glass (navbar) */
+.glass-pill {
+  background: rgba(255, 252, 247, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(26, 31, 59, 0.08);
+  box-shadow: 0 4px 20px rgba(26, 31, 59, 0.05);
+}
+
+/* Glass card — warm cream */
 .glass-card-light {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 252, 247, 0.7);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 10px 30px rgba(35, 41, 77, 0.03);
+  border: 1px solid rgba(26, 31, 59, 0.06);
+  box-shadow: 0 10px 30px rgba(26, 31, 59, 0.04);
 }
 
 .glass-card-light:hover {
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 20px 40px rgba(35, 41, 77, 0.08);
+  background: rgba(255, 252, 247, 0.9);
+  box-shadow: 0 20px 40px rgba(26, 31, 59, 0.08);
   transform: translateY(-2px);
   transition: all 0.3s ease;
 }
 
+/* Icon circle — warm cream with saffron tint */
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 122, 26, 0.08), rgba(255, 122, 26, 0.04));
+  border: 1px solid rgba(255, 122, 26, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease;
+}
+
+.icon-circle:hover {
+  background: linear-gradient(135deg, rgba(255, 122, 26, 0.15), rgba(255, 122, 26, 0.08));
+}
+
+/* Section divider — subtle warm line */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(26, 31, 59, 0.08) 50%, transparent 100%);
+  margin: 0 auto;
+}
+
+/* =========================================
+   GRADIENTS & TEXT EFFECTS
+   ========================================= */
+
+.text-saffron-gradient {
+  background: linear-gradient(135deg, #FF7A1A 0%, #FF8A1C 40%, #E8A838 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .text-gradient-primary {
-  background: linear-gradient(135deg, #23294D, #4A55A2);
+  background: linear-gradient(135deg, #1A1F3B, #4A55A2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -73,43 +142,85 @@ body {
   background-clip: text;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #23294D, #1A1F3B);
+/* =========================================
+   BUTTONS — PREMIUM WARM
+   ========================================= */
+
+.btn-saffron {
+  background: linear-gradient(135deg, #1A1F3B, #252B4D);
   color: white;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(35, 41, 77, 0.2);
+  box-shadow: 0 4px 15px rgba(26, 31, 59, 0.2);
+  font-weight: 600;
+}
+.btn-saffron:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(26, 31, 59, 0.3);
+}
+
+.btn-outline-saffron {
+  background: rgba(255, 252, 247, 0.9);
+  color: #1A1F3B;
+  border: 1px solid rgba(26, 31, 59, 0.15);
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+.btn-outline-saffron:hover {
+  background: white;
+  box-shadow: 0 4px 15px rgba(26, 31, 59, 0.08);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1A1F3B, #252B4D);
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(26, 31, 59, 0.2);
 }
 .btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(35, 41, 77, 0.3);
+  box-shadow: 0 8px 25px rgba(26, 31, 59, 0.3);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.9);
-  color: #23294D;
-  border: 1px solid rgba(35, 41, 77, 0.1);
+  background: rgba(255, 252, 247, 0.9);
+  color: #1A1F3B;
+  border: 1px solid rgba(26, 31, 59, 0.1);
   transition: all 0.3s ease;
 }
 .btn-secondary:hover {
   background: white;
-  box-shadow: 0 4px 15px rgba(35, 41, 77, 0.08);
+  box-shadow: 0 4px 15px rgba(26, 31, 59, 0.08);
   transform: translateY(-1px);
 }
 
-/* ---------------------------------
-   DARK PREMIUM UTILITIES (Chat)
----------------------------------- */
+/* Developer section glow */
+.developer-glow {
+  box-shadow: 0 20px 60px -15px rgba(255, 122, 26, 0.08);
+}
+
+/* =========================================
+   DARK PREMIUM THEME (Dashboard/Chat)
+   ========================================= */
+
+.dark-premium {
+  --aagni-darkbg: #050816;
+  --aagni-text: #F3F4F6;
+  --aagni-muted: #9CA3AF;
+  --aagni-border: rgba(255, 255, 255, 0.1);
+  --aagni-panel: rgba(255, 255, 255, 0.03);
+  background-color: #050816 !important;
+  color: #E2E8F0 !important;
+}
+
+.dark-premium ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+.dark-premium ::-webkit-scrollbar-thumb:hover { background: #FF7A1A; }
 
 .dark-glass {
   background: rgba(10, 13, 28, 0.6);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.dark-glass-panel {
-  background: rgba(10, 13, 28, 0.85);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 122, 26, 0.1);
 }
 
 .dark-glass:hover {
@@ -117,42 +228,22 @@ body {
   box-shadow: 0 8px 32px rgba(255, 122, 26, 0.05);
 }
 
+.dark-glass-panel {
+  background: rgba(10, 13, 28, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 122, 26, 0.1);
+}
+
 .voice-orb-glow {
   box-shadow: 0 0 60px rgba(255, 122, 26, 0.3), inset 0 0 40px rgba(138, 168, 255, 0.2);
 }
 
-/* Hide scrollbar for clean UI but keep functionality */
+/* Hide scrollbar for clean UI */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* AAGNI Dark Premium App Theme */
-.dark-premium {
-  --aagni-darkbg: #050816;
-  --aagni-text: #F3F4F6;
-  --aagni-muted: #9CA3AF;
-  --aagni-border: rgba(255, 255, 255, 0.1);
-  --aagni-panel: rgba(255, 255, 255, 0.03);
-}
-
-.dark-premium body {
-  background-color: var(--aagni-darkbg);
-  color: var(--aagni-text);
-}
-
-.dark-glass-panel {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-}
-
-.glass-pill {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }

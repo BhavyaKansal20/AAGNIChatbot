@@ -34,7 +34,7 @@ export function AagniOrb({ size = 60, isActive = false, isSpeaking = false }: Aa
       />
       
       <motion.div
-        className="relative rounded-full flex items-center justify-center dark-glass-panel border-2 border-white/20 bg-white/5 backdrop-blur-md overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]"
+        className="relative rounded-full flex items-center justify-center dark-glass-panel border-2 border-black/10 bg-black/5 backdrop-blur-md overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]"
         style={{ width: size, height: size }}
         animate={
           isSpeaking

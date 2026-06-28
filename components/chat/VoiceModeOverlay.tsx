@@ -146,15 +146,15 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-[100] bg-[#050816]/90 backdrop-blur-2xl flex flex-col items-center justify-between py-12 px-6"
+          className="fixed inset-0 z-[100] bg-[#FBF8F3]/90 backdrop-blur-2xl flex flex-col items-center justify-between py-12 px-6"
         >
           {/* Header Controls */}
           <div className="w-full max-w-4xl flex justify-between items-center relative z-10">
             <div className="flex items-center gap-4">
-              <button className="p-3 bg-white/5 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors border border-white/10">
+              <button className="p-3 bg-black/5 hover:bg-black/5 rounded-full text-[#1A1F3B]/70 hover:text-white transition-colors border border-black/10">
                 <Globe2 size={20} />
               </button>
-              <span className="text-sm font-medium text-white/70 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <span className="text-sm font-medium text-[#1A1F3B]/70 bg-black/5 px-4 py-2 rounded-full border border-black/10">
                 Hindi / English
               </span>
             </div>
@@ -163,7 +163,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
                 stopAll()
                 onClose()
               }}
-              className="p-3 bg-white/5 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors border border-white/10"
+              className="p-3 bg-black/5 hover:bg-black/5 rounded-full text-[#1A1F3B]/70 hover:text-white transition-colors border border-black/10"
             >
               <X size={20} />
             </button>
@@ -183,7 +183,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
               transition={{ duration: status === 'SPEAKING' ? 0.5 : 2, repeat: Infinity, ease: 'easeInOut' }}
               className="relative w-[300px] h-[300px] flex items-center justify-center"
             >
-              <div className="absolute inset-0 rounded-full voice-orb-glow mix-blend-screen" />
+              <div className="absolute inset-0 rounded-full voice-orb-glow mix-blend-multiply" />
               <AagniOrb size={250} />
             </motion.div>
             
@@ -191,7 +191,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
               <p className="text-aagni-saffron font-bold tracking-widest uppercase text-sm mb-2">
                 {status}
               </p>
-              <p className="text-2xl font-serif text-white/90 min-h-[4rem]">
+              <p className="text-2xl font-serif text-[#1A1F3B]/90 min-h-[4rem]">
                 {transcript ? `"${transcript}"` : (status === 'SPEAKING' ? "Speaking response..." : "Listening...")}
               </p>
             </div>
@@ -202,7 +202,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
             <button 
               onClick={startListening}
               className={`p-4 rounded-full transition-colors border ${
-                status === 'LISTENING' ? 'bg-aagni-saffron/20 text-aagni-saffron border-aagni-saffron/30' : 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border-white/10'
+                status === 'LISTENING' ? 'bg-aagni-saffron/20 text-aagni-saffron border-aagni-saffron/30' : 'bg-black/5 hover:bg-black/5 text-[#1A1F3B]/70 hover:text-white border-black/10'
               }`}
             >
               <Mic size={24} />
@@ -216,7 +216,7 @@ export function VoiceModeOverlay({ isOpen, onClose }: { isOpen: boolean; onClose
             >
               <PhoneOff size={32} />
             </button>
-            <button className="p-4 bg-white/5 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors border border-white/10">
+            <button className="p-4 bg-black/5 hover:bg-black/5 rounded-full text-[#1A1F3B]/70 hover:text-white transition-colors border border-black/10">
               <Settings2 size={24} />
             </button>
           </div>

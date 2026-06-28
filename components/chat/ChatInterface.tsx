@@ -168,16 +168,16 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
         {/* Main chat area */}
         <div className="flex-1 flex flex-col h-full min-w-0">
           {/* Top Navbar / Header area */}
-          <div className="h-14 flex items-center px-6 justify-between shrink-0 sticky top-0 z-10 bg-aagni-darkbg/80 backdrop-blur-md">
+          <div className="h-14 flex items-center px-6 justify-between shrink-0 sticky top-0 z-10 bg-[#FBF8F3]/80 backdrop-blur-md">
             {/* Left placeholder for the absolute layout sidebar toggle */}
             <div className="w-10 h-10" />
             
-            <h2 className="text-sm font-semibold text-white/90">AAGNI Chat</h2>
+            <h2 className="text-sm font-semibold text-[#1A1F3B]/90">AAGNI Chat</h2>
             
             {/* Right Panel Toggle */}
             <button 
               onClick={() => setRightPanelOpen(!rightPanelOpen)}
-              className={`p-2 rounded-lg transition-colors ${rightPanelOpen ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
+              className={`p-2 rounded-lg transition-colors ${rightPanelOpen ? 'bg-black/5 text-white' : 'text-[#1A1F3B]/50 hover:text-white hover:bg-black/5'}`}
               title="Toggle Utilities"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

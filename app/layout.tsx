@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { SessionProvider } from '@/components/providers/SessionProvider'
+import { IndianVibeBackground } from '@/components/shared/IndianVibeBackground'
 
 export const metadata: Metadata = {
   title: 'Aagni AI — India\'s Intelligent Assistant',
@@ -17,7 +18,8 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="relative">
+        <IndianVibeBackground />
         <SessionProvider>
           {children}
         </SessionProvider>

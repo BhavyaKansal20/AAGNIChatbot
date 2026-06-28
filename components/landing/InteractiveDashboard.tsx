@@ -95,11 +95,11 @@ export function InteractiveDashboard() {
                           <span className="font-semibold text-aagni-saffron">AAGNI Mini</span>
                           <span className="text-xs px-2 py-1 bg-aagni-saffron/10 text-aagni-saffron rounded-md">Active</span>
                         </div>
-                        <div className="p-3 bg-white/50 rounded-xl border border-black/5 flex justify-between items-center opacity-60">
+                        <div className="p-3 bg-black/50 rounded-xl border border-black/5 flex justify-between items-center opacity-60">
                           <span className="font-medium text-aagni-indigo">AAGNI Pro</span>
                           <span className="text-xs px-2 py-1 bg-black/5 text-aagni-indigo/60 rounded-md">Soon</span>
                         </div>
-                        <div className="p-3 bg-white/50 rounded-xl border border-black/5 flex justify-between items-center opacity-60">
+                        <div className="p-3 bg-black/50 rounded-xl border border-black/5 flex justify-between items-center opacity-60">
                           <span className="font-medium text-aagni-indigo">AAGNI Ultra</span>
                           <span className="text-xs px-2 py-1 bg-black/5 text-aagni-indigo/60 rounded-md">Soon</span>
                         </div>

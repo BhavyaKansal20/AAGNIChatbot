@@ -45,7 +45,7 @@ export function CodeCanvas({ block, onClose }: CodeCanvasProps) {
                   <FileCode size={14} className="text-aagni-saffron" />
                 </div>
                 <div>
-                  <p className="text-aagni-text text-sm font-medium">
+                  <p className="text-[#1A1F3B] text-sm font-medium">
                     {block.title || 'Code Canvas'}
                   </p>
                   <p className="text-aagni-muted text-xs uppercase tracking-wider">
@@ -58,7 +58,7 @@ export function CodeCanvas({ block, onClose }: CodeCanvasProps) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border border-aagni-saffron/30 bg-aagni-saffron/5 text-aagni-text hover:bg-aagni-saffron/10 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border border-aagni-saffron/30 bg-aagni-saffron/5 text-[#1A1F3B] hover:bg-aagni-saffron/10 transition-all"
                 >
                   {copied ? (
                     <>
@@ -74,7 +74,7 @@ export function CodeCanvas({ block, onClose }: CodeCanvasProps) {
                 </motion.button>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-aagni-muted hover:text-aagni-text hover:bg-white/5 transition-colors"
+                  className="p-1.5 rounded-lg text-aagni-muted hover:text-[#1A1F3B] hover:bg-black/5 transition-colors"
                 >
                   <X size={15} />
                 </button>

@@ -116,7 +116,7 @@ To exercise any of these rights, please contact our Data Protection Officer at d
 
 • **Usage & Analytics Data:** Retained in identifiable form for up to 24 months, after which it is anonymised and aggregated for long-term trend analysis.
 
-• **API Logs:** Request and response logs are retained for 30 days for debugging and support purposes, unless a longer retention period is required by your enterprise agreement.
+• **API Logs:** Request and response logs are retained for 30 days for debugging and support purposes.
 
 • **Content Data:** Text inputs, voice recordings, and documents are processed in real time and are not stored beyond the duration of the processing session unless you explicitly opt into conversation history features.
 
@@ -171,7 +171,7 @@ export default function PrivacyPolicyPage() {
       {/* Override body overflow for this page */}
       <style>{`body { overflow: auto !important; }`}</style>
 
-      <div className="min-h-screen" style={{ background: '#090910', fontFamily: "'Times New Roman', Times, serif" }}>
+      <div className="min-h-screen relative z-10" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
         {/* ═══════════════ NAVBAR ═══════════════ */}
         <nav
           className="fixed top-0 left-0 right-0 z-50 glass"
@@ -314,7 +314,7 @@ export default function PrivacyPolicyPage() {
                 className="text-base leading-relaxed mt-4"
                 style={{ color: '#c0c0d0', fontFamily: "'Times New Roman', Times, serif", lineHeight: 1.8 }}
               >
-                This policy applies to all users of our Services, including individual users, developers, and enterprise
+                This policy applies to all users of our Services, including individual users and developers.
                 clients. By accessing or using our Services, you acknowledge that you have read and understood this Privacy
                 Policy. We comply with the Digital Personal Data Protection Act, 2023 (DPDPA) and all applicable Indian
                 data protection regulations.
@@ -396,77 +396,11 @@ export default function PrivacyPolicyPage() {
                 </p>
               </div>
 
-              {/* Products */}
+              {/* Links */}
               <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Products</h4>
-                <ul className="space-y-2.5">
-                  {['Aagni Chat', 'Aagni Studio', 'Aagni API', 'Aagni Voice', 'Aagni Translate'].map((item) => (
-                    <li key={item}>
-                      <Link
-                        href="#"
-                        className="text-sm transition-colors duration-200"
-                        style={{ color: '#6b6b88' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* APIs */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>APIs</h4>
-                <ul className="space-y-2.5">
-                  {['Text to Speech', 'Speech to Text', 'Translation', 'Document AI', 'Language Detection'].map(
-                    (item) => (
-                      <li key={item}>
-                        <Link
-                          href="#"
-                          className="text-sm transition-colors duration-200"
-                          style={{ color: '#6b6b88' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                        >
-                          {item}
-                        </Link>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-
-              {/* Developers */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Developers</h4>
-                <ul className="space-y-2.5">
-                  {['Documentation', 'API Pricing', 'Integrations', 'SDKs'].map((item) => (
-                    <li key={item}>
-                      <Link
-                        href="#"
-                        className="text-sm transition-colors duration-200"
-                        style={{ color: '#6b6b88' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Company */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Company</h4>
+                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Legal</h4>
                 <ul className="space-y-2.5">
                   {[
-                    { label: 'About Us', href: '#' },
-                    { label: 'Careers', href: '#' },
-                    { label: 'Contact Us', href: '#' },
-                    { label: 'Blog', href: '#' },
                     { label: 'Privacy Policy', href: '/privacy' },
                     { label: 'Terms of Service', href: '/terms' },
                   ].map((item) => (

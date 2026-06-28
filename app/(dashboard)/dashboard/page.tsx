@@ -1,9 +1,5 @@
-import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { ChatInterface } from '@/components/chat/ChatInterface'
 
-export default async function DashboardPage() {
-  const session = await auth()
-  if (!session) redirect('/login')
-  return <ChatInterface />
+export default function DashboardPage() {
+  redirect('/chat')
 }

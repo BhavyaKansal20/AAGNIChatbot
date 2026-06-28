@@ -36,7 +36,7 @@ These Terms constitute a legally binding agreement between you and Aagni AI Tech
 
 • **Aagni Translate:** A neural machine translation service supporting translation between 22 scheduled Indian languages and 50+ global languages, with domain-specific terminology support.
 
-We reserve the right to modify, suspend, or discontinue any aspect of the Services at any time, with or without notice, subject to our obligations under applicable enterprise agreements.`,
+We reserve the right to modify, suspend, or discontinue any aspect of the Services at any time, with or without notice.`,
   },
   {
     title: '3. User Accounts',
@@ -52,9 +52,7 @@ We reserve the right to modify, suspend, or discontinue any aspect of the Servic
 
 • Immediately notify us at security@aagni.ai of any unauthorised use of your account or any other breach of security.
 
-We reserve the right to suspend or terminate your account if any information provided during registration or thereafter proves to be inaccurate, false, outdated, or incomplete, or if we have reasonable grounds to suspect fraudulent, abusive, or illegal activity.
-
-Enterprise accounts with multiple users are subject to additional terms specified in the applicable Enterprise Service Agreement.`,
+We reserve the right to suspend or terminate your account if any information provided during registration or thereafter proves to be inaccurate, false, outdated, or incomplete, or if we have reasonable grounds to suspect fraudulent, abusive, or illegal activity.`,
   },
   {
     title: '4. Acceptable Use Policy',
@@ -101,11 +99,10 @@ We do not use your User Content or Generated Output to train our AI models unles
 • **Rate Limits:** API usage is subject to rate limits based on your subscription tier:
   — Free Tier: 100 requests per minute, 1,000 requests per day
   — Pro Tier: 1,000 requests per minute, 50,000 requests per day
-  — Enterprise Tier: Custom rate limits as specified in your Enterprise Service Agreement
 
 • **Fair Use:** We reserve the right to throttle or suspend API access if usage patterns indicate abuse, automated misuse, or activity that degrades service quality for other users.
 
-• **SLA:** Pro and Enterprise tier subscribers are covered by our Service Level Agreement, which guarantees 99.9% API uptime, measured monthly, excluding scheduled maintenance windows.
+• **SLA:** Pro tier subscribers are covered by our Service Level Agreement, which guarantees 99.9% API uptime, measured monthly, excluding scheduled maintenance windows.
 
 • **Versioning:** We maintain backward compatibility for API versions for a minimum of 12 months after a new version is released. Deprecated API versions will be announced at least 6 months before end-of-life.
 
@@ -117,15 +114,15 @@ We do not use your User Content or Generated Output to train our AI models unles
 
 • **Subscription Fees:** Fees are billed in advance on a monthly or annual basis, depending on your chosen billing cycle. All fees are quoted in Indian Rupees (INR) and are exclusive of applicable Goods and Services Tax (GST).
 
-• **Payment Methods:** We accept payment via credit cards, debit cards, UPI, net banking, and wire transfer (for enterprise accounts). All payments are processed through RBI-compliant payment gateways.
+• **Payment Methods:** We accept payment via credit cards, debit cards, UPI, and net banking. All payments are processed through RBI-compliant payment gateways.
 
 • **Auto-Renewal:** Subscriptions automatically renew at the end of each billing period unless you cancel before the renewal date through the Aagni Studio dashboard or by contacting billing@aagni.ai.
 
-• **Refund Policy:** Annual subscription fees are refundable on a pro-rata basis within the first 30 days of the billing period. Monthly subscriptions are non-refundable. Refunds for enterprise agreements are governed by the applicable Enterprise Service Agreement.
+• **Refund Policy:** Annual subscription fees are refundable on a pro-rata basis within the first 30 days of the billing period. Monthly subscriptions are non-refundable.
 
 • **Overages:** Usage exceeding your subscription quota will be charged at the applicable overage rates. You will receive automated notifications at 80% and 100% of your quota.
 
-• **Invoice & Tax Compliance:** GST-compliant invoices are generated automatically and available in the Aagni Studio dashboard. For enterprise accounts requiring custom invoicing, please contact billing@aagni.ai.`,
+• **Invoice & Tax Compliance:** GST-compliant invoices are generated automatically and available in the Aagni Studio dashboard.`,
   },
   {
     title: '8. Limitation of Liability',
@@ -207,15 +204,13 @@ This dispute resolution clause shall survive the termination of these Terms.`,
 
 • We will update the "Effective Date" at the top of these Terms.
 
-• For enterprise clients, changes to Terms will be communicated through your designated account manager in addition to the above notifications.
-
 If you do not agree with the modified Terms, you must stop using the Services before the changes take effect and may request a pro-rata refund for any prepaid, unused subscription period.
 
 Your continued use of the Services after the effective date of the modified Terms constitutes your acceptance of the changes.`,
   },
   {
     title: '14. Miscellaneous',
-    content: `• **Entire Agreement:** These Terms, together with our Privacy Policy and any applicable Enterprise Service Agreement, constitute the entire agreement between you and Aagni AI regarding the Services and supersede all prior agreements and understandings.
+    content: `• **Entire Agreement:** These Terms, together with our Privacy Policy, constitute the entire agreement between you and Aagni AI regarding the Services and supersede all prior agreements and understandings.
 
 • **Severability:** If any provision of these Terms is held to be unenforceable or invalid, that provision will be modified to the minimum extent necessary to make it enforceable, and the remaining provisions will continue in full force and effect.
 
@@ -234,9 +229,7 @@ Your continued use of the Services after the effective date of the modified Term
 • **Email:** legal@aagni.ai
 • **General Support:** support@aagni.ai
 • **Registered Office:** Aagni AI Technologies Pvt. Ltd., Koramangala, Bengaluru, Karnataka 560095, India
-• **Billing Enquiries:** billing@aagni.ai
-
-For enterprise clients with dedicated account management, please reach out to your designated account manager directly.`,
+• **Billing Enquiries:** billing@aagni.ai`,
   },
 ]
 
@@ -246,7 +239,7 @@ export default function TermsPage() {
       {/* Override body overflow for this page */}
       <style>{`body { overflow: auto !important; }`}</style>
 
-      <div className="min-h-screen" style={{ background: '#090910', fontFamily: "'Times New Roman', Times, serif" }}>
+      <div className="min-h-screen relative z-10" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
         {/* ═══════════════ NAVBAR ═══════════════ */}
         <nav
           className="fixed top-0 left-0 right-0 z-50 glass"
@@ -393,8 +386,7 @@ export default function TermsPage() {
                 <Link href="/privacy" style={{ color: '#FF8C00', textDecoration: 'underline' }}>
                   Privacy Policy
                 </Link>
-                , which is incorporated herein by reference. These Terms apply to all visitors, users, developers, and
-                enterprise clients of the Services.
+                , which is incorporated herein by reference. These Terms apply to all visitors, users, and developers of the Services.
               </p>
             </motion.div>
 
@@ -474,77 +466,11 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Products */}
+              {/* Links */}
               <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Products</h4>
-                <ul className="space-y-2.5">
-                  {['Aagni Chat', 'Aagni Studio', 'Aagni API', 'Aagni Voice', 'Aagni Translate'].map((item) => (
-                    <li key={item}>
-                      <Link
-                        href="#"
-                        className="text-sm transition-colors duration-200"
-                        style={{ color: '#6b6b88' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* APIs */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>APIs</h4>
-                <ul className="space-y-2.5">
-                  {['Text to Speech', 'Speech to Text', 'Translation', 'Document AI', 'Language Detection'].map(
-                    (item) => (
-                      <li key={item}>
-                        <Link
-                          href="#"
-                          className="text-sm transition-colors duration-200"
-                          style={{ color: '#6b6b88' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                        >
-                          {item}
-                        </Link>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-
-              {/* Developers */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Developers</h4>
-                <ul className="space-y-2.5">
-                  {['Documentation', 'API Pricing', 'Integrations', 'SDKs'].map((item) => (
-                    <li key={item}>
-                      <Link
-                        href="#"
-                        className="text-sm transition-colors duration-200"
-                        style={{ color: '#6b6b88' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#c0c0d0')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#6b6b88')}
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Company */}
-              <div>
-                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Company</h4>
+                <h4 className="text-sm font-bold mb-4" style={{ color: '#FF8C00' }}>Legal</h4>
                 <ul className="space-y-2.5">
                   {[
-                    { label: 'About Us', href: '#' },
-                    { label: 'Careers', href: '#' },
-                    { label: 'Contact Us', href: '#' },
-                    { label: 'Blog', href: '#' },
                     { label: 'Privacy Policy', href: '/privacy' },
                     { label: 'Terms of Service', href: '/terms' },
                   ].map((item) => (
