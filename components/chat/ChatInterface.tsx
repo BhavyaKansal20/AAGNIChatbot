@@ -37,7 +37,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
   const [isLoading, setIsLoading] = useState(false)
   const [codeCanvas, setCodeCanvas] = useState<CodeBlock | null>(null)
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null)
-  const [rightPanelOpen, setRightPanelOpen] = useState(true)
+  const [rightPanelOpen, setRightPanelOpen] = useState(false)
   const [voiceModeOpen, setVoiceModeOpen] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -52,7 +52,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
     const data = await res.json()
     const newId = data.chat.id
     setChatId(newId)
-    router.replace(`/chat/${newId}`)
+    window.history.replaceState(null, '', `/chat/${newId}`)
     return newId
   }
 

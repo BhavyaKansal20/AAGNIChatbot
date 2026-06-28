@@ -24,14 +24,14 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="flex flex-col items-center gap-8 relative z-10 max-w-2xl w-full"
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-2xl mx-auto p-8 rounded-[40px] clay-glass relative overflow-hidden"
       >
         {/* Orb */}
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative"
+          className="relative flex justify-center mb-8"
         >
           <div className="absolute inset-0 bg-aagni-saffron/20 blur-2xl rounded-full" />
           <AagniOrb size={80} />
@@ -72,7 +72,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onSuggestion(sug.text)}
-                className="flex items-start gap-4 p-4 rounded-2xl bg-white/40 backdrop-blur-md border border-white hover:bg-white/60 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.04)] hover:shadow-md text-left group"
+                className="flex items-start gap-4 p-4 rounded-2xl liquid-glass hover:shadow-md transition-all text-left group"
               >
                 <div className={`p-2 rounded-xl shrink-0 ${sug.bg} ${sug.color}`}>
                   <Icon size={18} />

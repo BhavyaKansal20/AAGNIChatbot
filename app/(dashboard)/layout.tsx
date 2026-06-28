@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession()
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
   const chatId = pathname.startsWith('/chat/') ? pathname.split('/chat/')[1] : undefined
 
@@ -15,8 +15,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const checkMobile = () => {
       if (window.innerWidth < 768) {
         setSidebarOpen(false)
+        setSidebarOpen(false)
       } else {
-        setSidebarOpen(true)
+        setSidebarOpen(false)
       }
     }
     checkMobile()

@@ -80,7 +80,7 @@ export function Sidebar({
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="fixed left-4 top-4 bottom-4 w-[300px] z-40"
         >
-          <div className="w-full h-full bg-white/20 backdrop-blur-xl rounded-[32px] flex flex-col shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/50 overflow-hidden relative">
+          <div className="w-full h-full clay-glass rounded-[32px] flex flex-col overflow-hidden relative">
             
             {/* Top Section */}
             <div className="p-4 space-y-4">
@@ -95,9 +95,6 @@ export function Sidebar({
               <div className="space-y-1">
                 {[
                   { label: 'Chat', icon: <MessageSquare size={16} />, href: '/chat' },
-                  { label: 'Files', icon: <Folder size={16} />, href: '/files' },
-                  { label: 'Image Analysis', icon: <ImageIcon size={16} />, href: '/image-analysis' },
-                  { label: 'Document AI', icon: <FileText size={16} />, href: '/document-ai' },
                   { label: 'Voice Mode', icon: <Mic size={16} />, href: '/voice-mode' },
                 ].map((item) => (
                   <Link

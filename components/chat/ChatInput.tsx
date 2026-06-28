@@ -156,7 +156,7 @@ export function ChatInput({ onSend, isLoading, disabled, onVoiceMode }: ChatInpu
       </AnimatePresence>
 
       {/* Input box */}
-      <div className="bg-white/60 backdrop-blur-xl rounded-[24px] border border-white shadow-[0_8px_32px_rgba(0,0,0,0.04)] focus-within:shadow-md transition-all overflow-hidden relative" style={{ boxShadow: '0 20px 40px rgba(255,122,30,.05), 0 30px 60px rgba(62,102,255,.03), 0 40px 80px rgba(0,155,77,.02)' }}>
+      <div className="liquid-glass rounded-[24px] focus-within:shadow-lg transition-all overflow-hidden relative">
         <textarea
           ref={textareaRef}
           value={text}
