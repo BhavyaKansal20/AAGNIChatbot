@@ -53,25 +53,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         currentChatId={chatId}
       />
       
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar Toggle Button (Floating) */}
       <button 
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="fixed top-4 left-4 z-40 p-2 rounded-xl bg-white/40 backdrop-blur-md border border-white text-[#1A1F3B]/50 hover:text-[#1A1F3B] hover:bg-white/60 transition-colors shadow-sm"
         title="Toggle Sidebar"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="18" height="18" x="3" y="3" rx="2" />
-          <path d="M9 3v18" />
-        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
 
       <main
         className={`flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 relative z-10 ${sidebarOpen ? 'md:ml-[260px]' : 'ml-0'}`}

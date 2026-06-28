@@ -58,9 +58,15 @@ export function Sidebar({
   }
 
   const createChat = async () => {
-    const res = await fetch('/api/sessions', { method: 'POST' })
-    const { id } = await res.json()
-    router.push(`/chat/${id}`)
+    try {
+      const res = await fetch('/api/sessions', { method: 'POST' })
+      const data = await res.json()
+      if (data.chat?.id) {
+        router.push(`/chat/${data.chat.id}`)
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const deleteChat = async (e: React.MouseEvent, chatId: string) => {
