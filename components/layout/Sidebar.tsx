@@ -84,7 +84,7 @@ export function Sidebar({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -300, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed left-4 top-4 bottom-4 w-[300px] z-40"
+          className="fixed left-4 top-4 bottom-4 w-[280px] md:w-[300px] max-w-[calc(100vw-32px)] z-40"
         >
           <div className="w-full h-full clay-glass rounded-[32px] flex flex-col overflow-hidden relative">
             
