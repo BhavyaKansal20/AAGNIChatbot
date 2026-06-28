@@ -25,7 +25,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-2xl mx-auto p-8 rounded-[40px] clay-glass relative overflow-hidden"
+        className="w-full max-w-2xl mx-auto p-8 rounded-[40px] clay-glass relative overflow-hidden flex flex-col items-center gap-6"
       >
         {/* Orb */}
         <motion.div
