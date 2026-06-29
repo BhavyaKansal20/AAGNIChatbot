@@ -218,28 +218,71 @@ export async function POST(req: NextRequest) {
             { role: 'user', content: userText },
           ]
 
-        const sarvamRes = await fetch(SARVAM_API, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'api-subscription-key': process.env.SARVAM_API_KEY || '',
-          },
-          body: JSON.stringify({
-            model: 'sarvam-30b',
-            messages: apiMessages,
-            temperature: 0.7,
-            max_tokens: 1500,
-          }),
-        })
+          let textSuccess = false
+          
+          try {
+            const sarvamRes = await fetch(SARVAM_API, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'api-subscription-key': process.env.SARVAM_API_KEY || '',
+              },
+              body: JSON.stringify({
+                model: 'sarvam-30b',
+                messages: apiMessages,
+                temperature: 0.7,
+                max_tokens: 1500,
+              }),
+            })
 
-        if (sarvamRes.ok) {
-          const data = await sarvamRes.json()
-          if (data.choices?.[0]?.message?.content) {
-            aiResponse = data.choices[0].message.content
+            if (sarvamRes.ok) {
+              const data = await sarvamRes.json()
+              if (data.choices?.[0]?.message?.content) {
+                aiResponse = data.choices[0].message.content
+                textSuccess = true
+              }
+            } else {
+              console.error('[Telegram Text] Sarvam API Error:', await sarvamRes.text())
+            }
+          } catch (error) {
+            console.error('[Telegram Text] Sarvam Fetch Error:', error)
           }
-        } else {
-          console.error('[Telegram Text] Sarvam API Error:', await sarvamRes.text())
-        }
+
+          // Fallback to OpenRouter if Sarvam fails or times out
+          if (!textSuccess && process.env.OPENROUTER_API_KEY) {
+            try {
+              const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                  'HTTP-Referer': 'https://aagni-ai.vercel.app',
+                  'X-Title': 'Aagni AI Telegram',
+                },
+                body: JSON.stringify({
+                  model: 'meta-llama/llama-3.1-8b-instruct:free',
+                  messages: apiMessages,
+                }),
+              })
+
+              if (orRes.ok) {
+                const orData = await orRes.json()
+                const textContent = orData.choices?.[0]?.message?.content
+                if (textContent) {
+                  aiResponse = textContent
+                  textSuccess = true
+                }
+              } else {
+                console.error('[Telegram Text] OpenRouter Error:', await orRes.text())
+              }
+            } catch (e: any) {
+              console.error('[Telegram Text] OpenRouter Fetch Error:', e.message)
+            }
+          }
+
+          if (!textSuccess) {
+            aiResponse = 'Sorry, both Sarvam and my backup brain are currently unavailable. Please try again!'
+          }
       }
     } catch (error) {
       console.error('[Telegram] Fetch Error:', error)
