@@ -6,7 +6,12 @@ import { Check, Github } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 
 export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [videoFinished, setVideoFinished] = useState(false)
+  const [videoFinished, setVideoFinished] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    }
+    return false
+  })
 
   // Reset video state when modal closes
   useEffect(() => {
@@ -25,7 +30,7 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-md pointer-events-auto"
+            className="absolute inset-0 bg-black/60 pointer-events-auto"
             onClick={onClose}
           />
 
@@ -58,7 +63,7 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="pointer-events-auto relative w-full max-w-[440px] bg-white rounded-3xl overflow-hidden shadow-2xl z-[102] mx-4 border border-black/5"
+              className="pointer-events-auto relative w-full max-w-[440px] max-h-[90vh] overflow-y-auto bg-white rounded-3xl overflow-hidden shadow-2xl z-[102] mx-4 border border-black/5"
             >
               {/* Blurred Colorful Banner (Screenshot 2 style) */}
               <div className="h-[140px] w-full relative overflow-hidden flex items-center justify-center bg-black">

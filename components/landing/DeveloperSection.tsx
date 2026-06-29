@@ -83,24 +83,24 @@ export function DeveloperSection() {
               Bhavya Kansal
             </h3>
             <p className="text-[#FF7A1A] text-xl font-medium tracking-wide mb-8">
-              Founder & Developer · Aagni AI
+              AI Engineer, ML Researcher &amp; Founder — MultiModex AI
             </p>
 
             <p className="text-[#4A4D5E] text-[18px] font-sans leading-relaxed mb-10 max-w-3xl">
-              Building India's next-generation AI infrastructure from the ground up — from fine-tuning multilingual models to architecting production-grade APIs that serve millions. Passionate about making AI accessible to every Indian in their own language.
+              AI engineer building multimodal systems, deep learning pipelines, and production-ready applied AI products. Founder of MultiModex AI and creator of AAGNI AI — India&apos;s next-generation intelligent assistant. Passionate about making sovereign AI accessible to every Indian in their own language.
             </p>
 
             {/* Quote Box (Light Theme) */}
             <div className="bg-white/60 border border-black/5 rounded-3xl p-8 mb-12 relative overflow-hidden backdrop-blur-md max-w-4xl shadow-sm">
               <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#FF9933] via-transparent to-[#138808] opacity-50" />
               <p className="text-[#1A1F3B] text-xl italic leading-relaxed relative z-10">
-                "The future of AI isn't built in silos — it's forged at the intersection of sovereign compute, cultural intelligence, and relentless engineering. India doesn't just consume AI; India builds it."
+                &quot;India doesn&apos;t just consume AI — India builds it. AAGNI AI is proof that world-class artificial intelligence can be conceived, engineered, and deployed entirely from Indian soil.&quot;
               </p>
             </div>
 
             {/* Tag Pills */}
             <div className="flex flex-wrap gap-4 mt-auto mb-10">
-              {['Full-Stack AI', 'Systems Architecture', 'NLP Research', 'Cloud Infrastructure'].map(tag => (
+              {['AI/ML Engineering', 'Computer Vision', 'Deep Learning', 'Multimodal AI'].map(tag => (
                 <span 
                   key={tag} 
                   className="px-6 py-3 bg-white border border-black/10 shadow-sm rounded-full text-[#4A4D5E] text-sm font-sans font-bold hover:border-[#FF7A1A] hover:text-[#FF7A1A] transition-colors cursor-default"

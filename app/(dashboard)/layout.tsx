@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-[100dvh] w-full relative z-10 flex overflow-hidden h-[100dvh] text-[#1A1F3B] selection:bg-aagni-saffron/30 selection:text-[#1A1F3B]">
+    <div className="w-full relative z-10 flex overflow-hidden h-[100dvh] text-[#1A1F3B] selection:bg-aagni-saffron/30 selection:text-[#1A1F3B]">
 
       <Sidebar
         isOpen={sidebarOpen}
@@ -56,7 +56,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 md:hidden"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -64,14 +64,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar Toggle Button (Floating) */}
       <button 
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-40 p-2 rounded-xl bg-white/40 backdrop-blur-md border border-white text-[#1A1F3B]/50 hover:text-[#1A1F3B] hover:bg-white/60 transition-colors shadow-sm"
+        className="fixed top-4 left-4 z-50 p-2 rounded-xl bg-white/40 backdrop-blur-md border border-white text-[#1A1F3B]/50 hover:text-[#1A1F3B] hover:bg-white/60 transition-colors shadow-sm"
         title="Toggle Sidebar"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
 
       <main
-        className={`flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300 relative z-10 ${sidebarOpen ? 'md:ml-[260px]' : 'ml-0'}`}
+        className="flex-1 flex flex-col min-w-0 h-full overflow-hidden transition-all duration-300 relative z-10"
       >
         {children}
       </main>

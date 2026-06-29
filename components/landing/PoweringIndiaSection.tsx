@@ -69,7 +69,7 @@ export function PoweringIndiaSection() {
             <div>
               <h3 className="text-[19px] font-semibold text-[#1F2937] mb-2 font-sans tracking-tight">Sovereign by design</h3>
               <p className="text-[15px] text-[#6B7280] font-sans leading-relaxed">
-                Build, deploy, and run AI with full control, developed and operated entirely in India
+                Build, deploy, and run AI with full control, developed and operated entirely in India by AAGNI AI
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export function PoweringIndiaSection() {
             <div>
               <h3 className="text-[19px] font-semibold text-[#1F2937] mb-2 font-sans tracking-tight">State of the art models</h3>
               <p className="text-[15px] text-[#6B7280] font-sans leading-relaxed">
-                Industry-leading models built for India's languages, culture, and context
+                Powered by Sarvam 30B, 105B and Google Gemini — industry-leading models built for India&apos;s languages, culture, and context
               </p>
             </div>
           </div>
@@ -99,7 +99,7 @@ export function PoweringIndiaSection() {
             <div>
               <h3 className="text-[19px] font-semibold text-[#1F2937] mb-2 font-sans tracking-tight">Human at the core</h3>
               <p className="text-[15px] text-[#6B7280] font-sans leading-relaxed">
-                Forward deployed engineers work alongside your teams to deliver production-ready agents
+                AAGNI AI engineers work alongside your teams to deliver production-ready AI agents and solutions
               </p>
             </div>
           </div>

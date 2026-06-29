@@ -168,7 +168,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
         {/* Main chat area */}
         <div className="flex-1 flex flex-col h-full min-w-0">
           {/* Top Navbar / Header area */}
-          <div className="h-14 flex items-center px-6 justify-between shrink-0 sticky top-0 z-10 bg-[#FBF8F3]/80 backdrop-blur-md">
+          <div className="h-14 flex items-center px-4 justify-between shrink-0 sticky top-0 z-10 bg-white/90">
             {/* Left placeholder for the absolute layout sidebar toggle */}
             <div className="w-10 h-10" />
             
@@ -177,7 +177,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
             {/* Right Panel Toggle */}
             <button 
               onClick={() => setRightPanelOpen(!rightPanelOpen)}
-              className={`p-2 rounded-lg transition-colors ${rightPanelOpen ? 'bg-black/5 text-white' : 'text-[#1A1F3B]/50 hover:text-white hover:bg-black/5'}`}
+              className={`hidden md:flex p-2 rounded-lg transition-colors ${rightPanelOpen ? 'bg-black/5 text-white' : 'text-[#1A1F3B]/50 hover:text-white hover:bg-black/5'}`}
               title="Toggle Utilities"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -195,7 +195,7 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
                 onSuggestion={(text) => handleSend(text)}
               />
             ) : (
-              <div className="max-w-[900px] mx-auto px-4 py-8 space-y-8">
+              <div className="max-w-3xl mx-auto px-3 py-4 space-y-4 md:px-4 md:py-8 md:space-y-8">
                 <AnimatePresence initial={false}>
                   {messages.map((msg) => (
                     <MessageBubble
@@ -216,8 +216,8 @@ export function ChatInterface({ chatId: initialChatId, initialMessages = [] }: C
           </div>
 
           {/* Input area */}
-          <div className="flex-shrink-0 pt-4 pb-6 px-4 relative z-20">
-            <div className="max-w-[900px] mx-auto">
+          <div className="flex-shrink-0 pt-4 pb-4 safe-bottom px-4 relative z-20">
+            <div className="max-w-3xl mx-auto">
               <ChatInput
                 onSend={handleSend}
                 isLoading={isLoading}

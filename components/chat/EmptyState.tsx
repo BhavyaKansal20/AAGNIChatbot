@@ -22,18 +22,16 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-3xl mx-auto p-6 md:p-10 rounded-[32px] md:rounded-[48px] liquid-glass relative overflow-hidden flex flex-col items-center border border-white shadow-[0_20px_50px_rgba(26,31,59,0.05)]"
+        className="w-full max-w-3xl mx-auto p-5 md:p-10 rounded-[24px] md:rounded-[48px] liquid-glass relative overflow-hidden flex flex-col items-center border border-white shadow-[0_20px_50px_rgba(26,31,59,0.05)]"
       >
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#FF7A1A] via-white to-[#009B4D]" />
         
         {/* Orb */}
-        <motion.div
-          animate={{ boxShadow: ['0px 0px 20px rgba(255,122,26,0.2)', '0px 0px 40px rgba(62,102,255,0.2)', '0px 0px 20px rgba(0,155,77,0.2)'] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        <div
           className="relative flex justify-center mb-6 md:mb-10 bg-white/50 p-3 rounded-full border border-white shadow-sm"
         >
-          <AagniOrb size={90} />
-        </motion.div>
+          <AagniOrb size={70} />
+        </div>
 
         {/* Greeting */}
         <div className="text-center mb-8 md:mb-12 w-full">
@@ -41,7 +39,7 @@ export function EmptyState({ userName, onSuggestion }: EmptyStateProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl md:text-5xl font-extrabold text-[#1A1F3B] mb-4 tracking-tight leading-tight"
+            className="text-2xl md:text-5xl font-extrabold text-[#1A1F3B] mb-4 tracking-tight leading-tight"
           >
             Namaste, {userName ? userName.split(' ')[0] : 'Bharat'}
           </motion.h1>
