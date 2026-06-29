@@ -244,6 +244,7 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.error('[Telegram] Fetch Error:', error)
     }
+    }
 
     // Send the response back to Telegram
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
