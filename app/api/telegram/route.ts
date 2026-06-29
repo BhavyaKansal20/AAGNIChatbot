@@ -13,52 +13,117 @@ export async function POST(req: NextRequest) {
   try {
     const update = await req.json()
 
-    // Ensure we have a message and text
-    if (!update || !update.message || !update.message.text) {
+    // Ensure we have a message
+    if (!update || !update.message) {
       return NextResponse.json({ ok: true })
     }
 
-    const chatId = update.message.chat.id
-    const userText = update.message.text
+    const message = update.message
+    const chatId = message.chat.id
+    
+    // Check if it's text or a photo
+    const isPhoto = !!message.photo && message.photo.length > 0
+    const hasText = !!message.text
+    const userText = message.text || message.caption || 'Describe this image.'
+
+    if (!isPhoto && !hasText) {
+       return NextResponse.json({ ok: true })
+    }
 
     // Tell Telegram we received the message to stop it from retrying immediately
-    // Note: To send typing indicator, we need to fire and forget
     fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendChatAction`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, action: 'typing' }),
     }).catch(console.error)
 
-    // Call Sarvam AI
-    const apiMessages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      { role: 'user', content: userText },
-    ]
-
     let aiResponse = 'Sorry, I am having trouble connecting to my brain right now.'
 
     try {
-      const sarvamRes = await fetch(SARVAM_API, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-subscription-key': process.env.SARVAM_API_KEY || '',
-        },
-        body: JSON.stringify({
-          model: 'sarvam-3b-chat-v0.5',
-          messages: apiMessages,
-          temperature: 0.7,
-          max_tokens: 1500,
-        }),
-      })
+      if (isPhoto) {
+        // --- VISION MODE (Gemini) ---
+        // 1. Get the highest resolution photo
+        const photo = message.photo[message.photo.length - 1]
+        const fileId = photo.file_id
 
-      if (sarvamRes.ok) {
-        const data = await sarvamRes.json()
-        if (data.choices?.[0]?.message?.content) {
-          aiResponse = data.choices[0].message.content
+        // 2. Get file path from Telegram
+        const fileInfoRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`)
+        const fileInfo = await fileInfoRes.json()
+        
+        if (fileInfo.ok && fileInfo.result?.file_path) {
+          const filePath = fileInfo.result.file_path
+          
+          // 3. Download the actual image
+          const imageRes = await fetch(`https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${filePath}`)
+          const imageBuffer = await imageRes.arrayBuffer()
+          const base64Data = Buffer.from(imageBuffer).toString('base64')
+          const mimeType = filePath.endsWith('.png') ? 'image/png' : 'image/jpeg'
+
+          // 4. Send to Gemini
+          if (process.env.GEMINI_API_KEY) {
+            const geminiRes = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [
+                        { text: userText },
+                        { inline_data: { mime_type: mimeType, data: base64Data } }
+                      ]
+                    }
+                  ]
+                })
+              }
+            )
+
+            if (geminiRes.ok) {
+              const gData = await geminiRes.json()
+              const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
+              if (geminiText) {
+                aiResponse = geminiText
+              }
+            } else {
+              console.error('[Telegram Vision] Gemini API failed:', await geminiRes.text())
+            }
+          } else {
+            aiResponse = 'I cannot process images right now because my Gemini vision core is missing.'
+          }
+        } else {
+           console.error('[Telegram Vision] Could not get file path:', fileInfo)
         }
+
       } else {
-        console.error('[Telegram] Sarvam API Error:', await sarvamRes.text())
+        // --- TEXT MODE (Sarvam) ---
+        const apiMessages = [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userText },
+        ]
+
+        const sarvamRes = await fetch(SARVAM_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-subscription-key': process.env.SARVAM_API_KEY || '',
+          },
+          body: JSON.stringify({
+            model: 'sarvam-3b-chat-v0.5',
+            messages: apiMessages,
+            temperature: 0.7,
+            max_tokens: 1500,
+          }),
+        })
+
+        if (sarvamRes.ok) {
+          const data = await sarvamRes.json()
+          if (data.choices?.[0]?.message?.content) {
+            aiResponse = data.choices[0].message.content
+          }
+        } else {
+          console.error('[Telegram Text] Sarvam API Error:', await sarvamRes.text())
+        }
       }
     } catch (error) {
       console.error('[Telegram] Fetch Error:', error)
