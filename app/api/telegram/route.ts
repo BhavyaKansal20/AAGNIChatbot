@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     // Check if it's text or a photo
     const isPhoto = !!message.photo && message.photo.length > 0
     const hasText = !!message.text
-    const userText = message.text || message.caption || 'Describe this image.'
+    let userText = message.text || message.caption || 'Describe this image.'
 
     if (!isPhoto && !hasText) {
        return NextResponse.json({ ok: true })
@@ -47,125 +47,176 @@ export async function POST(req: NextRequest) {
     }).catch(console.error)
 
     let aiResponse = 'Sorry, I am having trouble connecting to my brain right now.'
+    let activeSystemPrompt = SYSTEM_PROMPT
+    let skipAI = false
 
-    try {
-      if (isPhoto) {
-        // --- VISION MODE (Gemini) ---
-        // 1. Get the highest resolution photo
-        const photo = message.photo[message.photo.length - 1]
-        const fileId = photo.file_id
+    // Command Router
+    if (userText.startsWith('/')) {
+      const firstWord = userText.split(' ')[0].toLowerCase()
+      const commandArg = userText.slice(firstWord.length).trim()
 
-        // 2. Get file path from Telegram
-        const fileInfoRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`)
-        const fileInfo = await fileInfoRes.json()
-        
-        if (fileInfo.ok && fileInfo.result?.file_path) {
-          const filePath = fileInfo.result.file_path
+      switch (firstWord) {
+        case '/start':
+          aiResponse = "Welcome to AAGNI AI! 🔥\n\nI am India's most advanced culturally aware AI. Send me text, photos, or use commands like `/help` to see what I can do."
+          skipAI = true
+          break
+        case '/help':
+          aiResponse = "Here is what I can do:\n\n/start - Wake up Aagni AI\n/code <question> - Switch to Expert Developer Mode\n/translate <language> <text> - Switch to Translation Mode\n/vision - Learn about image analysis\n/clear - Reset the conversation"
+          skipAI = true
+          break
+        case '/vision':
+          aiResponse = "To use my Vision capabilities, simply tap the attachment icon (📎) in Telegram, select a photo, and add a caption asking me to analyze it!"
+          skipAI = true
+          break
+        case '/clear':
+          aiResponse = "Memory cleared! Starting fresh. ✨"
+          skipAI = true
+          break
+        case '/code':
+          if (!commandArg && !isPhoto) {
+            aiResponse = "Please provide what you want me to code. Example:\n`/code write a python loop`"
+            skipAI = true
+          } else {
+            activeSystemPrompt = "You are a Senior Software Engineer. You output highly optimized, clean, and production-ready code. Skip pleasantries. Only provide the solution. Wrap code in markdown blocks."
+            userText = commandArg || 'Analyze this image and write code for it.'
+          }
+          break
+        case '/translate':
+          if (!commandArg && !isPhoto) {
+            aiResponse = "Please provide the language and text. Example:\n`/translate hindi How are you?`"
+            skipAI = true
+          } else {
+            activeSystemPrompt = "You are an expert translator fluent in 22 Indian languages and global languages. Your ONLY job is to accurately translate the user's text into the requested language. Do not add any extra conversation."
+            userText = commandArg ? `Translate the following to the specified language: ${commandArg}` : 'Translate the text in this image.'
+          }
+          break
+      }
+    }
+
+    if (!skipAI) {
+      try {
+        if (isPhoto) {
+          // --- VISION MODE (Gemini) ---
+          // 1. Get the highest resolution photo
+          const photo = message.photo[message.photo.length - 1]
+          const fileId = photo.file_id
+
+          // 2. Get file path from Telegram
+          const fileInfoRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`)
+          const fileInfo = await fileInfoRes.json()
           
-          // 3. Download the actual image
-          const imageRes = await fetch(`https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${filePath}`)
-          const imageBuffer = await imageRes.arrayBuffer()
-          const base64Data = Buffer.from(imageBuffer).toString('base64')
-          const mimeType = filePath.endsWith('.png') ? 'image/png' : 'image/jpeg'
+          if (fileInfo.ok && fileInfo.result?.file_path) {
+            const filePath = fileInfo.result.file_path
+            
+            // 3. Download the actual image
+            const imageRes = await fetch(`https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${filePath}`)
+            const imageBuffer = await imageRes.arrayBuffer()
+            const base64Data = Buffer.from(imageBuffer).toString('base64')
+            const mimeType = filePath.endsWith('.png') ? 'image/png' : 'image/jpeg'
 
-          let visionSuccess = false
-          let lastError = ''
+            let visionSuccess = false
+            let lastError = ''
+            
+            // For Vision, we prepend the active system prompt if it changed, otherwise just use userText
+            const finalVisionPrompt = activeSystemPrompt !== SYSTEM_PROMPT 
+              ? `${activeSystemPrompt}\n\nUser Request: ${userText}` 
+              : userText
 
-          // Attempt 1: Gemini
-          if (process.env.GEMINI_API_KEY) {
-            try {
-              const geminiRes = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
-                {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    contents: [
-                      {
-                        parts: [
-                          { text: userText },
-                          { inline_data: { mime_type: mimeType, data: base64Data } }
-                        ]
-                      }
-                    ]
-                  })
-                }
-              )
+            // Attempt 1: Gemini
+            if (process.env.GEMINI_API_KEY) {
+              try {
+                const geminiRes = await fetch(
+                  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      contents: [
+                        {
+                          parts: [
+                            { text: finalVisionPrompt },
+                            { inline_data: { mime_type: mimeType, data: base64Data } }
+                          ]
+                        }
+                      ]
+                    })
+                  }
+                )
 
-              if (geminiRes.ok) {
-                const gData = await geminiRes.json()
-                const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
-                if (geminiText) {
-                  aiResponse = geminiText
-                  visionSuccess = true
+                if (geminiRes.ok) {
+                  const gData = await geminiRes.json()
+                  const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
+                  if (geminiText) {
+                    aiResponse = geminiText
+                    visionSuccess = true
+                  } else {
+                    lastError = 'Gemini returned empty text response.'
+                  }
                 } else {
-                  lastError = 'Gemini returned empty text response.'
+                  lastError = `Gemini API failed (${geminiRes.status}): ${await geminiRes.text()}`
                 }
-              } else {
-                lastError = `Gemini API failed (${geminiRes.status}): ${await geminiRes.text()}`
+              } catch (e: any) {
+                lastError = `Gemini fetch exception: ${e.message}`
               }
-            } catch (e: any) {
-              lastError = `Gemini fetch exception: ${e.message}`
+            } else {
+              lastError = 'No GEMINI_API_KEY available.'
+            }
+
+            // Attempt 2: OpenRouter Fallback
+            if (!visionSuccess && process.env.OPENROUTER_API_KEY) {
+              try {
+                const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    'HTTP-Referer': 'https://aagni-ai.vercel.app',
+                    'X-Title': 'Aagni AI Telegram',
+                  },
+                  body: JSON.stringify({
+                    model: 'nvidia/nemotron-nano-12b-v2-vl:free',
+                    messages: [
+                      {
+                        role: 'user',
+                        content: [
+                          { type: 'text', text: finalVisionPrompt },
+                          { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Data}` } },
+                        ],
+                      }
+                    ],
+                  }),
+                })
+
+                if (orRes.ok) {
+                  const orData = await orRes.json()
+                  const textContent = orData.choices?.[0]?.message?.content
+                  if (textContent) {
+                    aiResponse = textContent
+                    visionSuccess = true
+                  } else {
+                    lastError += ' | OpenRouter empty.'
+                  }
+                } else {
+                  lastError += ` | OpenRouter failed (${orRes.status}): ${await orRes.text()}`
+                }
+              } catch (e: any) {
+                lastError += ` | OpenRouter exception: ${e.message}`
+              }
+            }
+
+            if (!visionSuccess) {
+              aiResponse = `All vision models failed. Error: ${lastError}`
             }
           } else {
-            lastError = 'No GEMINI_API_KEY available.'
+             aiResponse = `Could not get file path from Telegram. Error: ${JSON.stringify(fileInfo)}`
           }
 
-          // Attempt 2: OpenRouter Fallback
-          if (!visionSuccess && process.env.OPENROUTER_API_KEY) {
-            try {
-              const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-                  'HTTP-Referer': 'https://aagni-ai.vercel.app',
-                  'X-Title': 'Aagni AI Telegram',
-                },
-                body: JSON.stringify({
-                  model: 'nvidia/nemotron-nano-12b-v2-vl:free',
-                  messages: [
-                    {
-                      role: 'user',
-                      content: [
-                        { type: 'text', text: userText },
-                        { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Data}` } },
-                      ],
-                    }
-                  ],
-                }),
-              })
-
-              if (orRes.ok) {
-                const orData = await orRes.json()
-                const textContent = orData.choices?.[0]?.message?.content
-                if (textContent) {
-                  aiResponse = textContent
-                  visionSuccess = true
-                } else {
-                  lastError += ' | OpenRouter empty.'
-                }
-              } else {
-                lastError += ` | OpenRouter failed (${orRes.status}): ${await orRes.text()}`
-              }
-            } catch (e: any) {
-              lastError += ` | OpenRouter exception: ${e.message}`
-            }
-          }
-
-          if (!visionSuccess) {
-            aiResponse = `All vision models failed. Error: ${lastError}`
-          }
         } else {
-           aiResponse = `Could not get file path from Telegram. Error: ${JSON.stringify(fileInfo)}`
-        }
-
-      } else {
-        // --- TEXT MODE (Sarvam) ---
-        const apiMessages = [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: userText },
-        ]
+          // --- TEXT MODE (Sarvam) ---
+          const apiMessages = [
+            { role: 'system', content: activeSystemPrompt },
+            { role: 'user', content: userText },
+          ]
 
         const sarvamRes = await fetch(SARVAM_API, {
           method: 'POST',
