@@ -59,40 +59,93 @@ export async function POST(req: NextRequest) {
           const base64Data = Buffer.from(imageBuffer).toString('base64')
           const mimeType = filePath.endsWith('.png') ? 'image/png' : 'image/jpeg'
 
-          // 4. Send to Gemini
-          if (process.env.GEMINI_API_KEY) {
-            const geminiRes = await fetch(
-              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
-              {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  contents: [
-                    {
-                      parts: [
-                        { text: userText },
-                        { inline_data: { mime_type: mimeType, data: base64Data } }
-                      ]
-                    }
-                  ]
-                })
-              }
-            )
+          let visionSuccess = false
+          let lastError = ''
 
-            if (geminiRes.ok) {
-              const gData = await geminiRes.json()
-              const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
-              if (geminiText) {
-                aiResponse = geminiText
+          // Attempt 1: Gemini
+          if (process.env.GEMINI_API_KEY) {
+            try {
+              const geminiRes = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY.trim()}`,
+                {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [
+                      {
+                        parts: [
+                          { text: userText },
+                          { inline_data: { mime_type: mimeType, data: base64Data } }
+                        ]
+                      }
+                    ]
+                  })
+                }
+              )
+
+              if (geminiRes.ok) {
+                const gData = await geminiRes.json()
+                const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
+                if (geminiText) {
+                  aiResponse = geminiText
+                  visionSuccess = true
+                } else {
+                  lastError = 'Gemini returned empty text response.'
+                }
               } else {
-                aiResponse = 'Gemini returned empty text response.'
+                lastError = `Gemini API failed (${geminiRes.status}): ${await geminiRes.text()}`
               }
-            } else {
-              const errText = await geminiRes.text()
-              aiResponse = `Gemini API failed (${geminiRes.status}): ${errText}`
+            } catch (e: any) {
+              lastError = `Gemini fetch exception: ${e.message}`
             }
           } else {
-            aiResponse = 'I cannot process images right now because my Gemini vision core is missing (No GEMINI_API_KEY).'
+            lastError = 'No GEMINI_API_KEY available.'
+          }
+
+          // Attempt 2: OpenRouter Fallback
+          if (!visionSuccess && process.env.OPENROUTER_API_KEY) {
+            try {
+              const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                  'HTTP-Referer': 'https://aagni-ai.vercel.app',
+                  'X-Title': 'Aagni AI Telegram',
+                },
+                body: JSON.stringify({
+                  model: 'nvidia/nemotron-nano-12b-v2-vl:free',
+                  messages: [
+                    {
+                      role: 'user',
+                      content: [
+                        { type: 'text', text: userText },
+                        { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Data}` } },
+                      ],
+                    }
+                  ],
+                }),
+              })
+
+              if (orRes.ok) {
+                const orData = await orRes.json()
+                const textContent = orData.choices?.[0]?.message?.content
+                if (textContent) {
+                  aiResponse = textContent
+                  visionSuccess = true
+                } else {
+                  lastError += ' | OpenRouter empty.'
+                }
+              } else {
+                lastError += ` | OpenRouter failed (${orRes.status}): ${await orRes.text()}`
+              }
+            } catch (e: any) {
+              lastError += ` | OpenRouter exception: ${e.message}`
+            }
+          }
+
+          if (!visionSuccess) {
+            aiResponse = `All vision models failed. Error: ${lastError}`
           }
         } else {
            aiResponse = `Could not get file path from Telegram. Error: ${JSON.stringify(fileInfo)}`
