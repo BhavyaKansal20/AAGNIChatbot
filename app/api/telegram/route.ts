@@ -247,7 +247,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Send the response back to Telegram
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    const sendRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -256,6 +256,18 @@ export async function POST(req: NextRequest) {
         parse_mode: 'Markdown', // Helps with code blocks and bold text
       }),
     })
+
+    if (!sendRes.ok) {
+      console.warn('[Telegram] Markdown parse failed, falling back to plain text')
+      await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: aiResponse,
+        }),
+      })
+    }
 
     return NextResponse.json({ ok: true })
   } catch (error) {
