@@ -84,14 +84,19 @@ export async function POST(req: NextRequest) {
               const geminiText = gData.candidates?.[0]?.content?.parts?.[0]?.text
               if (geminiText) {
                 aiResponse = geminiText
+              } else {
+                aiResponse = 'Gemini returned success but no text.'
               }
             } else {
-              console.error('[Telegram Vision] Gemini API failed:', await geminiRes.text())
+              const errText = await geminiRes.text()
+              aiResponse = `Gemini API failed: ${errText}`
+              console.error('[Telegram Vision] Gemini API failed:', errText)
             }
           } else {
-            aiResponse = 'I cannot process images right now because my Gemini vision core is missing.'
+            aiResponse = 'I cannot process images right now because my GEMINI_API_KEY is missing.'
           }
         } else {
+           aiResponse = `Could not get file path from Telegram. Response: ${JSON.stringify(fileInfo)}`
            console.error('[Telegram Vision] Could not get file path:', fileInfo)
         }
 
@@ -125,7 +130,8 @@ export async function POST(req: NextRequest) {
           console.error('[Telegram Text] Sarvam API Error:', await sarvamRes.text())
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      aiResponse = `Exception caught in vision logic: ${error.message}`
       console.error('[Telegram] Fetch Error:', error)
     }
 
